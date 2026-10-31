@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Virtual environment
+.venv/
+
+# Environment & Secrets
+.env
+secrets.h
+Sensor/secrets.h
+
+# Data
+*.db
+data/raw/
+data/processed/
+src/data/
+frontend/node_modules/
+frontend/dist/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
