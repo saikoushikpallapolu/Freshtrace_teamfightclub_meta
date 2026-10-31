@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Strict 8pt Modular System */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Strict Typography Scale (1.25 Major Third) */
+  --font-xs: 0.75rem;    /* 12px */
+  --font-sm: 0.875rem;   /* 14px */
+  --font-base: 1rem;      /* 16px */
+  --font-lg: 1.125rem;   /* 18px */
+  --font-xl: 1.375rem;   /* 22px */
+  --font-2xl: 1.75rem;   /* 28px */
+  --font-3xl: 2.25rem;   /* 36px */
+  --font-4xl: 3.25rem;   /* 52px */
+
+  /* Black & White High Contrast Palette */
+  --black-pure: #000000;
+  --black-soft: #121212;
+  --black-charcoal: #222222;
+
+  --surface-white: #ffffff;
+  --surface-glass: rgba(255, 255, 255, 0.94);
+  --surface-subtle: #f9faf9;
+  
+  --border-light: rgba(0, 0, 0, 0.08);
+  --border-black: #000000;
+  --border-hover: rgba(0, 0, 0, 0.2);
+
+  --text-black: #000000;
+  --text-dark: #181818;
+  --text-secondary: #3e3e3e;
+  --text-tertiary: #686868;
+  --text-muted: #909090;
+
+  /* Semantic Status Highlights */
+  --color-green-card: #15803d;
+  --color-amber-card: #d97706;
+  --color-red-card: #dc2626;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-elevation: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+
+  --font-sans: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text-black);
+  min-height: 100vh;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f4f5f8;
+  overflow-x: hidden;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
