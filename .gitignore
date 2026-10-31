@@ -29,3 +29,12 @@ frontend/dist/
 
 # OS
 .DS_Store
+
+# Generated document previews and intermediate exports
+tmp/
+output/
+
+# Local product media and evaluation runs (keep directory documentation)
+data/media/*
+!data/media/README.md
+data/evaluation/runs/
