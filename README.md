@@ -12,6 +12,8 @@ The product name is undecided.
   complete directory structure, planned files, ownership boundaries and known gaps.
 - [Model validation](docs/model_validation.md): live Muse/SAM results, mask preview,
   tested environment and rerun instructions on the model-validation branch.
+- [Video model-flow demo](docs/video_model_demo.md): four-model video run, private
+  interactive replay link, timeline, real outputs and reproduction instructions.
 
 The existing application is a React/Vite dashboard, FastAPI telemetry API,
 Python inference worker and ESP32-S3 sensor firmware. Most new product folders are
