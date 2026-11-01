@@ -14,6 +14,10 @@ The product name is undecided.
   tested environment and rerun instructions on the model-validation branch.
 - [Video model-flow demo](docs/video_model_demo.md): four-model video run, private
   interactive replay link, timeline, real outputs and reproduction instructions.
+- [Model report card](docs/model_report_card.md): measured results, unknown accuracy
+  metrics and recommendations about retrieval and fine-tuning.
+- [Physical testing roadmap](docs/testing_roadmap.md): blind item-level evaluation,
+  sensor characterization and controlled mixed-crate removal experiments.
 
 The existing application is a React/Vite dashboard, FastAPI telemetry API,
 Python inference worker and ESP32-S3 sensor firmware. Most new product folders are
