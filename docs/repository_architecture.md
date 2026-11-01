@@ -2,6 +2,17 @@
 
 Reviewed: 31 October 2026. Product name: undecided.
 
+## Checked-in demonstration media
+
+The completed model validation and video demonstration are included in `main`.
+`demos/video-model-flow/` is a self-contained, buildless replay with original and
+SAM-overlay movies, synthetic request audio, source video, checkpoint images and
+sanitized results. `docs/media/` contains the narrated MP4, captions, transcript,
+chapters and eight lab screenshots plus crop metadata. These approved assets are
+tracked directly in Git. The largest file is under 6 MB; Git LFS is not required.
+Draft exports in `output/`, raw responses/caches in `tmp/`, local uploads, database
+files and secrets remain ignored. See [media guide](media/README.md).
+
 This document describes the actual repository and a complete target layout for
 the combined Rescue, Investigator and ShelfWatch workflow. Existing application
 files stay in place. New directories contain documentation only; filenames shown

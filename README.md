@@ -18,6 +18,10 @@ The product name is undecided.
   metrics and recommendations about retrieval and fine-tuning.
 - [Physical testing roadmap](docs/testing_roadmap.md): blind item-level evaluation,
   sensor characterization and controlled mixed-crate removal experiments.
+- [Narrated walkthrough and screenshots](docs/media/README.md): checked-in MP4,
+  captions, transcript, chapter timestamps and lab captures.
+- [Standalone lab](demos/video-model-flow/README.md): checked-in replay videos,
+  audio and checkpoint snapshots; runs locally without a key or hosted-site login.
 
 The existing application is a React/Vite dashboard, FastAPI telemetry API,
 Python inference worker and ESP32-S3 sensor firmware. Most new product folders are

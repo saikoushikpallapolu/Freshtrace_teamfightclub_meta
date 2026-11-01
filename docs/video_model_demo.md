@@ -2,13 +2,21 @@
 
 Date: 1 November 2026. Application branch: `codex/meta-model-validation`.
 
+The completed validation work and media are now included in `main`. The branch
+above identifies where the model/demo implementation was developed.
+
+For a login-free result, use the [narrated walkthrough](media/README.md) or run the
+[self-contained local lab](../demos/video-model-flow/README.md). Its original and
+overlay videos, audio and checkpoints are tracked in the application repository.
+
 **Open the demo:** https://tomato-model-flow-lab.majormarch1.chatgpt.site
 
 The Site is private; sign in with the ChatGPT account that owns this workspace.
 Deployment was confirmed successful by Sites. The browser session used for QA was
 not signed in to the private hosted Site, so its published page stopped at the
 normal login gate. The identical static source was tested through local preview.
-The parent application's `main` branch remains unchanged.
+The Site deployment uses its own source repository; it does not deploy from the
+application repository's `main` branch.
 
 ## What changed from the first validation
 

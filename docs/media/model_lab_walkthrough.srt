@@ -1,0 +1,181 @@
+1
+00:00:00,000 --> 00:00:07,720
+Welcome to the model flow lab. This edited walkthrough uses captured lab screens and
+outputs from real Meta
+
+2
+00:00:07,720 --> 00:00:15,011
+API calls. We follow one tomato through an accelerated video, then connect its visual
+history to an
+
+3
+00:00:15,011 --> 00:00:18,442
+inspection workflow. The product name is still undecided.
+
+4
+00:00:18,442 --> 00:00:21,016
+No live sensor readings were supplied.
+
+5
+00:00:21,667 --> 00:00:26,095
+First, Muse Voice Transcribe turns a spoken request into text.
+
+6
+00:00:26,095 --> 00:00:32,738
+The original tomato video is silent, so this test uses a separately synthesized
+demonstration request.
+
+7
+00:00:32,738 --> 00:00:37,166
+The real model returned the transcript shown in the lab.
+
+8
+00:00:37,166 --> 00:00:42,037
+That text is included in the history passed to the planner.
+
+9
+00:00:42,037 --> 00:00:44,252
+Here is the demonstration request.
+
+10
+00:00:44,252 --> 00:00:48,750
+DEMO REQUEST: Check this tomato batch. Compare earlier and later observations.
+
+11
+00:00:48,750 --> 00:00:55,294
+Tell me what to inspect next, and ask for a sensor measurement if evidence is missing.
+
+12
+00:00:55,933 --> 00:01:01,074
+Next, SAM three point one receives the video and the short prompt, tomato.
+
+13
+00:01:01,074 --> 00:01:07,400
+It returns an object box and a pixel mask for the tomato in each analyzed frame.
+
+14
+00:01:07,400 --> 00:01:13,332
+We decoded masks for all one hundred and ten frames and rendered this overlay movie.
+
+15
+00:01:13,332 --> 00:01:16,100
+SAM supplies the object's location and shape.
+
+16
+00:01:16,100 --> 00:01:20,054
+It does not assign an inspection or food safety verdict.
+
+17
+00:01:20,667 --> 00:01:25,897
+Muse Spark analyzes the full video and returns eight structured checkpoint
+observations.
+
+18
+00:01:25,897 --> 00:01:32,870
+In this run, it described increasing gray textured coverage near the stem, followed by
+surface depression
+
+19
+00:01:32,870 --> 00:01:40,279
+and wrinkling. The lab lets you select a checkpoint and read the saved observation
+with its visibility
+
+20
+00:01:40,279 --> 00:01:46,816
+limits. These are visual categories. The accelerated playback does not reveal the real
+storage duration.
+
+21
+00:01:47,467 --> 00:01:54,649
+Rescue is the decision workflow. Application code maps Spark's visual category to the
+proposed inspection
+
+22
+00:01:54,649 --> 00:02:02,789
+priority. Here the displayed points increase from thirty five, to seventy, to one
+hundred as visible concern
+
+23
+00:02:02,789 --> 00:02:07,577
+increases. These are heuristic priority points, not probabilities of spoilage.
+
+24
+00:02:07,577 --> 00:02:15,238
+Because no gas or environmental measurements exist for this video, the sensor channel
+and combined score
+
+25
+00:02:15,238 --> 00:02:16,196
+remain unavailable.
+
+26
+00:02:16,800 --> 00:02:19,563
+Muse Wonder powers the Investigator planning step.
+
+27
+00:02:19,563 --> 00:02:26,669
+It made a real history tool call, received the saved video observations and returned
+this read only plan.
+
+28
+00:02:26,669 --> 00:02:32,196
+It compared earlier and later evidence, requested additional views and identified the
+missing sensor
+
+29
+00:02:32,196 --> 00:02:34,959
+protocol. This is a full clip summary.
+
+30
+00:02:34,959 --> 00:02:43,249
+The model did not perform a physical measurement or an A B group test, and it did not
+approve stock for
+
+31
+00:02:43,249 --> 00:02:43,644
+sale.
+
+32
+00:02:44,267 --> 00:02:47,348
+ShelfWatch keeps the evidence under one batch identity.
+
+33
+00:02:47,348 --> 00:02:51,971
+The timeline connects each checkpoint, mask and observation to the same sample.
+
+34
+00:02:51,971 --> 00:02:57,750
+In the lab you can create a follow up task and mark the demonstration reviewed.
+
+35
+00:02:57,750 --> 00:03:00,446
+Those actions are local to the browser.
+
+36
+00:03:00,446 --> 00:03:08,151
+In the future app, a vendor would confirm an actual inspection or stock outcome, and
+the next plan would use
+
+37
+00:03:08,151 --> 00:03:09,306
+that saved history.
+
+38
+00:03:09,933 --> 00:03:15,557
+Finally, the model receipts show response identifiers, usage and the planning tool
+trace.
+
+39
+00:03:15,557 --> 00:03:21,180
+This demonstrates all four required model integrations and how their outputs fit
+together.
+
+40
+00:03:21,180 --> 00:03:28,101
+The next build step is to connect real batch storage, controlled sensor sessions and
+human confirmed
+
+41
+00:03:28,101 --> 00:03:35,888
+actions. This video is an explanation of the lab, not evidence of food safety or
+validated shelf life.
