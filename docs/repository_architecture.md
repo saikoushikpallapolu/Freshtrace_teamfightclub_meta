@@ -7,6 +7,16 @@ the combined Rescue, Investigator and ShelfWatch workflow. Existing application
 files stay in place. New directories contain documentation only; filenames shown
 as planned below are implementation destinations, not working features.
 
+### Model-validation branch update - 1 November 2026
+
+On `codex/meta-model-validation`, `src/backend/meta/{__init__,client,vision,segmentation,planner}.py`
+and `tests/unit/test_meta_integration.py` are now implemented. The standalone
+`scripts/smoke/validate_meta_models.py` exercises real hosted inference and a
+fixture-backed, read-only history tool. See [model validation](model_validation.md)
+for the run evidence. The target tree below retains the original planning labels
+as the baseline; these named files are the exception. Product endpoints, persistence
+migrations, task orchestration and UI wiring are still planned.
+
 ## 1. Architecture at a glance
 
 The existing application is device-centered. The proposed product is batch-centered:

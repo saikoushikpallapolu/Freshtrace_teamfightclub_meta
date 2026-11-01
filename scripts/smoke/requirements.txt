@@ -1,0 +1,6 @@
+# Standalone checks only; does not change the application's runtime dependencies.
+openai==2.54.0
+meta-sam-parser==0.1.0
+pillow==13.0.0
+# pytest is only needed to run the offline validation suite.
+pytest>=8,<9

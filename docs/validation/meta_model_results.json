@@ -1,0 +1,339 @@
+{
+  "run_id": "20261101T141807Z_ec3c698b",
+  "date_utc": "2026-11-01T14:18:07.206397+00:00",
+  "base_url": "https://api.meta.ai/v1",
+  "checks": {
+    "text": {
+      "passed": true,
+      "text": "Meta Muse API access works.",
+      "calls": [
+        {
+          "model": "muse-spark-1.3",
+          "response_id": "resp_6ae74a21601c23c881ea4161",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 18,
+            "input_tokens_details": {
+              "cache_write_tokens": null,
+              "cached_tokens": 0
+            },
+            "output_tokens": 219,
+            "output_tokens_details": {
+              "reasoning_tokens": 204
+            },
+            "total_tokens": 237
+          }
+        }
+      ],
+      "elapsed_seconds": 2.77
+    },
+    "vision": {
+      "passed": true,
+      "observation": {
+        "produce_types": [
+          "tomato",
+          "green long chili pepper",
+          "white button mushroom",
+          "celeriac root",
+          "cherry tomato",
+          "carrot",
+          "red onion",
+          "green bell pepper",
+          "mandarin",
+          "lemon",
+          "orange",
+          "spring onion",
+          "green onion stalks",
+          "potato",
+          "red chili pepper",
+          "red sweet pepper",
+          "mini cucumber",
+          "purple grape",
+          "garlic",
+          "banana",
+          "strawberry",
+          "avocado",
+          "pomegranate",
+          "red cabbage",
+          "zucchini",
+          "broccoli",
+          "radish"
+        ],
+        "visible_observations": [
+          "Red round tomatoes on green vine stems at upper left",
+          "Three light-green elongated peppers with stems at top",
+          "Cluster of small white round mushrooms at top center",
+          "Light tan-brown rough textured root with rootlets and stem",
+          "Small round red tomatoes with green calyxes near center",
+          "Four orange tapered carrots with textured skin",
+          "Two purple-red round onions with papery skin",
+          "Two glossy green blocky bell peppers with stems",
+          "Round orange citrus with textured peel on left-center and right side",
+          "Three small round yellow citrus fruits on right",
+          "Two oval pale-yellow potatoes with brown speckles on right",
+          "White bulbed stalks with roots at top right",
+          "Long thin green stalks along right edge",
+          "Two long glossy red chili peppers on lower right",
+          "Four dark-green short cucumbers with shiny wet-looking skin at bottom",
+          "Cluster of dark-purple round grapes on stems at bottom center",
+          "Four white garlic bulbs with papery layers",
+          "Three long glossy red peppers at bottom left",
+          "Two yellow curved bananas with small brown marks",
+          "Multiple red strawberries with green tops and surface seeds",
+          "Two dark-green oval avocados with bumpy skin",
+          "One round red pomegranate with crown end",
+          "One dark-purple round cabbage head on left",
+          "Two light-green elongated zucchini with stems",
+          "One green broccoli head with dense buds",
+          "One magenta round root with pink-white tip",
+          "Green feathery herb fronds under bananas on lower left"
+        ],
+        "visibility_limits": [
+          "Only exterior and upper surfaces visible in top-down view; undersides and rear sides not visible",
+          "Many items overlap so portions are occluded by neighboring produce and cutting boards",
+          "Interiors, cross-sections, and close micro-surface detail not visible at this resolution",
+          "No information on smell, chemical composition, food safety, or exact remaining life can be determined from visual appearance alone"
+        ]
+      },
+      "calls": [
+        {
+          "model": "muse-spark-1.3",
+          "response_id": "resp_6ae74a2d4ff54c4d257547f5",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 2212,
+            "input_tokens_details": {
+              "cache_write_tokens": null,
+              "cached_tokens": 0
+            },
+            "output_tokens": 1925,
+            "output_tokens_details": {
+              "reasoning_tokens": 1397
+            },
+            "total_tokens": 4137
+          }
+        }
+      ],
+      "elapsed_seconds": 12.33
+    },
+    "sam": {
+      "passed": true,
+      "segmentation": {
+        "width": 1600,
+        "height": 1067,
+        "mask_count": 11,
+        "objects": [
+          {
+            "object_id": "0",
+            "bounds": [
+              116,
+              120,
+              233,
+              259
+            ],
+            "foreground_pixels": 12538,
+            "mask_file": "mask_000.png"
+          },
+          {
+            "object_id": "1",
+            "bounds": [
+              24,
+              55,
+              143,
+              137
+            ],
+            "foreground_pixels": 5021,
+            "mask_file": "mask_001.png"
+          },
+          {
+            "object_id": "2",
+            "bounds": [
+              0,
+              91,
+              118,
+              223
+            ],
+            "foreground_pixels": 11993,
+            "mask_file": "mask_002.png"
+          },
+          {
+            "object_id": "3",
+            "bounds": [
+              664,
+              319,
+              744,
+              399
+            ],
+            "foreground_pixels": 4734,
+            "mask_file": "mask_003.png"
+          },
+          {
+            "object_id": "4",
+            "bounds": [
+              0,
+              226,
+              144,
+              352
+            ],
+            "foreground_pixels": 13399,
+            "mask_file": "mask_004.png"
+          },
+          {
+            "object_id": "5",
+            "bounds": [
+              810,
+              286,
+              891,
+              364
+            ],
+            "foreground_pixels": 4224,
+            "mask_file": "mask_005.png"
+          },
+          {
+            "object_id": "6",
+            "bounds": [
+              751,
+              341,
+              832,
+              420
+            ],
+            "foreground_pixels": 4506,
+            "mask_file": "mask_006.png"
+          },
+          {
+            "object_id": "7",
+            "bounds": [
+              708,
+              406,
+              795,
+              483
+            ],
+            "foreground_pixels": 5031,
+            "mask_file": "mask_007.png"
+          },
+          {
+            "object_id": "8",
+            "bounds": [
+              713,
+              257,
+              787,
+              335
+            ],
+            "foreground_pixels": 4463,
+            "mask_file": "mask_008.png"
+          },
+          {
+            "object_id": "9",
+            "bounds": [
+              772,
+              218,
+              846,
+              290
+            ],
+            "foreground_pixels": 4295,
+            "mask_file": "mask_009.png"
+          },
+          {
+            "object_id": "10",
+            "bounds": [
+              827,
+              175,
+              900,
+              248
+            ],
+            "foreground_pixels": 4058,
+            "mask_file": "mask_010.png"
+          }
+        ],
+        "diagnostics": [],
+        "nonempty_masks": true
+      },
+      "calls": [
+        {
+          "model": "sam-3.1",
+          "response_id": "resp_6ae74a302e6e87d034d448ee",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 0,
+            "input_tokens_details": {
+              "cache_write_tokens": null,
+              "cached_tokens": 0
+            },
+            "output_tokens": 0,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 0,
+            "images_processed": 1
+          }
+        }
+      ],
+      "elapsed_seconds": 4.24
+    },
+    "planner": {
+      "passed": true,
+      "tool_trace": [
+        {
+          "name": "get_batch_history",
+          "arguments": {
+            "batch_id": "DEMO-TOMATO-01"
+          },
+          "status": "completed",
+          "data_source": "synthetic_integration_fixture_not_a_real_vendor_batch"
+        }
+      ],
+      "plan": "**Batch evidence retrieved for DEMO-TOMATO-01**\n- Data source: `synthetic_integration_fixture_not_a_real_vendor_batch`\n- Produce type: tomato\n- Latest photo status: **missing**\n- Latest sensor session: **null**\n- Sensor protocol: stabilization_seconds **null**, recovery_seconds **null**, characterized **false**\n- Human inspection: **not_recorded**\n- Allowed next actions: `take_photo`, `characterize_protocol`, `request_human_inspection`\n- Stock disposition authorized: **false**\n\n**Read-only proposed plan — no action has been performed:**\n\n1. **Propose `take_photo`** — a photo is missing, so visual evidence is not yet available.\n2. **Propose `characterize_protocol`** — sensor timing is uncharacterized. Do not use an exact sensor schedule until stabilization and recovery are characterized. No sensor measurement is available to interpret.\n3. **Propose `request_human_inspection`** — human inspection has not been recorded.\n\nNo food-safety or stock-disposition decision can be made from the current missing evidence, and disposition is not authorized.",
+      "calls": [
+        {
+          "model": "muse-wonder-1.0",
+          "response_id": "resp_6ae74a4c7c11857832154b87",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 570,
+            "input_tokens_details": {
+              "cache_write_tokens": null,
+              "cached_tokens": 0
+            },
+            "output_tokens": 221,
+            "output_tokens_details": {
+              "reasoning_tokens": 132
+            },
+            "total_tokens": 791
+          }
+        },
+        {
+          "model": "muse-wonder-1.0",
+          "response_id": "resp_6ae74a5bb3a7c7cea0bd4476",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 799,
+            "input_tokens_details": {
+              "cache_write_tokens": null,
+              "cached_tokens": 500
+            },
+            "output_tokens": 1398,
+            "output_tokens_details": {
+              "reasoning_tokens": 1162
+            },
+            "total_tokens": 2197
+          }
+        }
+      ],
+      "elapsed_seconds": 18.42,
+      "successful_run_id": "20261101T141849Z_f11bdb2e"
+    }
+  },
+  "image_role": "existing repository image; integration test, not a vendor trial",
+  "source_image_sha256": "842c5bba9021df83aa3ab42de5f57302bfecf0165d1e4df3db28486080271106",
+  "resolved_compatibility_issue": {
+    "http_status": 400,
+    "message": "only `\"auto\"` is supported for `tool_choice`. `\"none\"`, `\"required\"`, and named function choices are not currently supported",
+    "fix": "Use tool_choice=auto; enforce a completed allowlisted tool trace in application code."
+  },
+  "validation_limits": [
+    "One existing repository image, not a vendor or sensor trial.",
+    "No food-quality accuracy, independent mask benchmark or physical sensor validation.",
+    "Planner reads an explicit synthetic fixture; no real batch database or sensor is invoked.",
+    "Successful checks combined from two runs; initial provider rejection retained above."
+  ]
+}

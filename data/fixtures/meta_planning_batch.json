@@ -1,0 +1,15 @@
+{
+  "data_source": "synthetic_integration_fixture_not_a_real_vendor_batch",
+  "batch_id": "DEMO-TOMATO-01",
+  "produce_type": "tomato",
+  "latest_photo_status": "missing",
+  "latest_sensor_session": null,
+  "sensor_protocol": {
+    "stabilization_seconds": null,
+    "recovery_seconds": null,
+    "characterized": false
+  },
+  "human_inspection": "not_recorded",
+  "allowed_next_actions": ["take_photo", "characterize_protocol", "request_human_inspection"],
+  "stock_disposition_authorized": false
+}

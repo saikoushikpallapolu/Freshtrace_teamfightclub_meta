@@ -10,8 +10,11 @@ The product name is undecided.
   model roles, scoring, implementation milestones and evaluation.
 - [Repository architecture](docs/repository_architecture.md): current runtime,
   complete directory structure, planned files, ownership boundaries and known gaps.
+- [Model validation](docs/model_validation.md): live Muse/SAM results, mask preview,
+  tested environment and rerun instructions on the model-validation branch.
 
 The existing application is a React/Vite dashboard, FastAPI telemetry API,
-Python inference worker and ESP32-S3 sensor firmware. New product folders are
-documented scaffolding; they do not yet implement the Meta-powered workflows.
+Python inference worker and ESP32-S3 sensor firmware. Most new product folders are
+documented scaffolding. The Meta adapters now provide live-tested perception and
+read-only planning boundaries; the complete product workflow is not yet wired in.
 Existing runtime entry points and deployment scripts remain in place.
