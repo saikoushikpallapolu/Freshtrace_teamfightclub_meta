@@ -1,0 +1,881 @@
+{
+  "run_utc": "2026-11-01T14:33:23.939056+00:00",
+  "source": {
+    "title": "Pourrissement tomate",
+    "author": "Lionel Allorge",
+    "page": "https://commons.wikimedia.org/wiki/File:Pourrissement_tomate.webm",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Pourrissement_tomate.webm",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "changes": "Resized to 640px, resampled to 4 fps; extracted frames; model mask overlays added.",
+    "sha256": "3e7e83472caaa2f0ddae4692419295c03f21eaaf37d1b9fd71d0d66216e09ef3"
+  },
+  "fps": 4,
+  "frame_count": 110,
+  "duration_seconds": 27.5,
+  "mode": "recorded_real_model_run_with_browser_local_workflow_demo",
+  "voice": {
+    "model": "muse-voice-transcribe-1.0",
+    "input_kind": "synthetic Windows SAPI demonstration request; not video audio",
+    "response": {
+      "sessionId": "tomato-video-demo",
+      "transcript": "check this tomato batch compare the earlier and later observations tell me what to inspect next and ask for a sensor measurement if evidence is missing",
+      "audioDurationMs": 11120,
+      "turns": [
+        {
+          "turnId": 0,
+          "startMs": 60,
+          "endMs": 10460,
+          "transcript": "check this tomato batch compare the earlier and later observations tell me what to inspect next and ask for a sensor measurement if evidence is missing",
+          "speaker": "A"
+        }
+      ]
+    },
+    "elapsed_seconds": 4.41
+  },
+  "spark": {
+    "observation": {
+      "checkpoints": [
+        {
+          "next_check": "Re-check at playback second 4 for change in size or density of top light area and dark spots; same fixed front-top view only.",
+          "observation": "At playback second 0, a round red object sits on a white surface in front-top view. Near the stem on top are several small dark discolored spots and a small white fuzzy-appearing patch to the right of the stem. The remaining red skin looks glossy and the overall shape looks round and full in this view.",
+          "second": 0,
+          "visible_concern": "mild",
+          "frame_index": 0,
+          "mask_count": 1,
+          "sensor_status": "not_measured",
+          "combined_score": null,
+          "visual_priority_points": 35
+        },
+        {
+          "next_check": "Re-check at playback second 8 for continued expansion or densification; underside and rear remain not visible.",
+          "observation": "At playback second 4, the light white-gray fuzzy-appearing area around the stem looks slightly larger and denser than at second 0 but remains localized to the top. Dark spots remain around the stem. The lower red surface still looks glossy and round with no additional distant spots visible in this angle.",
+          "second": 4,
+          "visible_concern": "mild",
+          "frame_index": 16,
+          "mask_count": 1,
+          "sensor_status": "not_measured",
+          "combined_score": null,
+          "visual_priority_points": 35
+        },
+        {
+          "next_check": "Re-check at playback second 12 for further spread across the shoulder and change in surface contour; limited to same viewpoint and lighting.",
+          "observation": "At playback second 8, the light gray fuzzy-appearing textured area around the stem covers more of the top shoulder and looks more continuous than before. Dark margins remain at its edges. The main red body still looks glossy and round.",
+          "second": 8,
+          "visible_concern": "clear",
+          "frame_index": 32,
+          "mask_count": 1,
+          "sensor_status": "not_measured",
+          "combined_score": null,
+          "visual_priority_points": 70
+        },
+        {
+          "next_check": "Re-check at playback second 16 for increase in covered area and surface unevenness; interior and underside cannot be assessed.",
+          "observation": "At playback second 12, the light gray textured area around the stem occupies a larger portion of the top and looks denser. The boundary between the altered top and the surrounding red skin is still visible. Overall shape remains largely round in this view.",
+          "second": 12,
+          "visible_concern": "clear",
+          "frame_index": 48,
+          "mask_count": 1,
+          "sensor_status": "not_measured",
+          "combined_score": null,
+          "visual_priority_points": 70
+        },
+        {
+          "next_check": "Re-check at playback second 20 for widening of top zone and change in contour; same single angle only.",
+          "observation": "At playback second 16, the altered top area looks broader with more extensive gray textured coverage around the stem and slight surface unevenness. The lower red portion retains its color and gloss in this view, while the top contour looks less even than earlier.",
+          "second": 16,
+          "visible_concern": "clear",
+          "frame_index": 64,
+          "mask_count": 1,
+          "sensor_status": "not_measured",
+          "combined_score": null,
+          "visual_priority_points": 70
+        },
+        {
+          "next_check": "Re-check at playback second 24 for further depression, wrinkling, or spread; no odor, texture, or internal data available.",
+          "observation": "At playback second 20, the top shows a wider uneven-appearing zone with extensive gray textured coverage and darker pits where dark spots were seen. The right shoulder shows slight change in surface contour. The lower red body still looks glossy in this view.",
+          "second": 20,
+          "visible_concern": "clear",
+          "frame_index": 80,
+          "mask_count": 1,
+          "sensor_status": "not_measured",
+          "combined_score": null,
+          "visual_priority_points": 70
+        },
+        {
+          "next_check": "Re-check at playback second 27 for continued change in top depression and shoulder wrinkling; alternate angles would be needed for full extent.",
+          "observation": "At playback second 24, the gray textured top coverage is extensive across the upper surface with deeper-appearing depressions and more evident slight wrinkling on the right shoulder. The top contour looks lower and less even, while the lower red area remains visible.",
+          "second": 24,
+          "visible_concern": "severe",
+          "frame_index": 96,
+          "mask_count": 1,
+          "sensor_status": "not_measured",
+          "combined_score": null,
+          "visual_priority_points": 100
+        },
+        {
+          "next_check": "No further playback supplied; if continued, check for further spread, shape change, or surface leakage from same angle plus alternate views if available.",
+          "observation": "At playback second 27, the top exhibits a large dense gray textured zone with pronounced sunken-appearing pits around the stem and visible wrinkling on the right side. The lower body remains red, but the upper shape looks collapsed inward in this single view. Underside and interior are not visible.",
+          "second": 27,
+          "visible_concern": "severe",
+          "frame_index": 108,
+          "mask_count": 1,
+          "sensor_status": "not_measured",
+          "combined_score": null,
+          "visual_priority_points": 100
+        }
+      ],
+      "limits": [
+        "Single fixed front-top viewpoint only; rear, sides, underside and interior not visible.",
+        "No sensor, smell, touch, safety, or expiry measurements supplied; visual categories only.",
+        "Playback is accelerated time-lapse; real-world elapsed time cannot be inferred from playback seconds.",
+        "Gloss highlights and white background may obscure subtle early surface detail.",
+        "Biological identity, cause, and edibility cannot be determined from images alone."
+      ],
+      "summary": "Accelerated playback shows a round red object on a white surface with pre-existing dark spots and a small light fuzzy-appearing area near the stem, which visibly expands in area and density across playback seconds while the top develops increasing unevenness, depression and wrinkling. The lower red body remains largely intact in color in this single view, with extent limited by viewpoint and lack of sensor data."
+    },
+    "elapsed_seconds": 24.64,
+    "response_id": "resp_6ae74d634534c3b2fbfc4685",
+    "usage": {
+      "input_tokens": 7146,
+      "input_tokens_details": {
+        "cache_write_tokens": null,
+        "cached_tokens": 0
+      },
+      "output_tokens": 4043,
+      "output_tokens_details": {
+        "reasoning_tokens": 3019
+      },
+      "total_tokens": 11189
+    }
+  },
+  "sam": {
+    "response_id": "resp_6ae74d4bbd47896146aa45f2",
+    "elapsed_seconds": 5.54,
+    "usage": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "cache_write_tokens": null,
+        "cached_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 0,
+      "video_frames_processed": 110
+    },
+    "frames": [
+      {
+        "frame": 0,
+        "playback_second": 0.0,
+        "mask_count": 1,
+        "area_pixels": 64747
+      },
+      {
+        "frame": 1,
+        "playback_second": 0.25,
+        "mask_count": 1,
+        "area_pixels": 64371
+      },
+      {
+        "frame": 2,
+        "playback_second": 0.5,
+        "mask_count": 1,
+        "area_pixels": 64377
+      },
+      {
+        "frame": 3,
+        "playback_second": 0.75,
+        "mask_count": 1,
+        "area_pixels": 64357
+      },
+      {
+        "frame": 4,
+        "playback_second": 1.0,
+        "mask_count": 1,
+        "area_pixels": 64319
+      },
+      {
+        "frame": 5,
+        "playback_second": 1.25,
+        "mask_count": 1,
+        "area_pixels": 64305
+      },
+      {
+        "frame": 6,
+        "playback_second": 1.5,
+        "mask_count": 1,
+        "area_pixels": 64282
+      },
+      {
+        "frame": 7,
+        "playback_second": 1.75,
+        "mask_count": 1,
+        "area_pixels": 64253
+      },
+      {
+        "frame": 8,
+        "playback_second": 2.0,
+        "mask_count": 1,
+        "area_pixels": 64257
+      },
+      {
+        "frame": 9,
+        "playback_second": 2.25,
+        "mask_count": 1,
+        "area_pixels": 64235
+      },
+      {
+        "frame": 10,
+        "playback_second": 2.5,
+        "mask_count": 1,
+        "area_pixels": 64219
+      },
+      {
+        "frame": 11,
+        "playback_second": 2.75,
+        "mask_count": 1,
+        "area_pixels": 64190
+      },
+      {
+        "frame": 12,
+        "playback_second": 3.0,
+        "mask_count": 1,
+        "area_pixels": 64165
+      },
+      {
+        "frame": 13,
+        "playback_second": 3.25,
+        "mask_count": 1,
+        "area_pixels": 64153
+      },
+      {
+        "frame": 14,
+        "playback_second": 3.5,
+        "mask_count": 1,
+        "area_pixels": 64131
+      },
+      {
+        "frame": 15,
+        "playback_second": 3.75,
+        "mask_count": 1,
+        "area_pixels": 64085
+      },
+      {
+        "frame": 16,
+        "playback_second": 4.0,
+        "mask_count": 1,
+        "area_pixels": 64184
+      },
+      {
+        "frame": 17,
+        "playback_second": 4.25,
+        "mask_count": 1,
+        "area_pixels": 63920
+      },
+      {
+        "frame": 18,
+        "playback_second": 4.5,
+        "mask_count": 1,
+        "area_pixels": 63903
+      },
+      {
+        "frame": 19,
+        "playback_second": 4.75,
+        "mask_count": 1,
+        "area_pixels": 63893
+      },
+      {
+        "frame": 20,
+        "playback_second": 5.0,
+        "mask_count": 1,
+        "area_pixels": 63899
+      },
+      {
+        "frame": 21,
+        "playback_second": 5.25,
+        "mask_count": 1,
+        "area_pixels": 63898
+      },
+      {
+        "frame": 22,
+        "playback_second": 5.5,
+        "mask_count": 1,
+        "area_pixels": 63901
+      },
+      {
+        "frame": 23,
+        "playback_second": 5.75,
+        "mask_count": 1,
+        "area_pixels": 63827
+      },
+      {
+        "frame": 24,
+        "playback_second": 6.0,
+        "mask_count": 1,
+        "area_pixels": 63792
+      },
+      {
+        "frame": 25,
+        "playback_second": 6.25,
+        "mask_count": 1,
+        "area_pixels": 63758
+      },
+      {
+        "frame": 26,
+        "playback_second": 6.5,
+        "mask_count": 1,
+        "area_pixels": 63754
+      },
+      {
+        "frame": 27,
+        "playback_second": 6.75,
+        "mask_count": 1,
+        "area_pixels": 63750
+      },
+      {
+        "frame": 28,
+        "playback_second": 7.0,
+        "mask_count": 1,
+        "area_pixels": 63733
+      },
+      {
+        "frame": 29,
+        "playback_second": 7.25,
+        "mask_count": 1,
+        "area_pixels": 63728
+      },
+      {
+        "frame": 30,
+        "playback_second": 7.5,
+        "mask_count": 1,
+        "area_pixels": 63706
+      },
+      {
+        "frame": 31,
+        "playback_second": 7.75,
+        "mask_count": 1,
+        "area_pixels": 63687
+      },
+      {
+        "frame": 32,
+        "playback_second": 8.0,
+        "mask_count": 1,
+        "area_pixels": 63827
+      },
+      {
+        "frame": 33,
+        "playback_second": 8.25,
+        "mask_count": 1,
+        "area_pixels": 63585
+      },
+      {
+        "frame": 34,
+        "playback_second": 8.5,
+        "mask_count": 1,
+        "area_pixels": 63604
+      },
+      {
+        "frame": 35,
+        "playback_second": 8.75,
+        "mask_count": 1,
+        "area_pixels": 63588
+      },
+      {
+        "frame": 36,
+        "playback_second": 9.0,
+        "mask_count": 1,
+        "area_pixels": 63542
+      },
+      {
+        "frame": 37,
+        "playback_second": 9.25,
+        "mask_count": 1,
+        "area_pixels": 63552
+      },
+      {
+        "frame": 38,
+        "playback_second": 9.5,
+        "mask_count": 1,
+        "area_pixels": 63554
+      },
+      {
+        "frame": 39,
+        "playback_second": 9.75,
+        "mask_count": 1,
+        "area_pixels": 63500
+      },
+      {
+        "frame": 40,
+        "playback_second": 10.0,
+        "mask_count": 1,
+        "area_pixels": 63494
+      },
+      {
+        "frame": 41,
+        "playback_second": 10.25,
+        "mask_count": 1,
+        "area_pixels": 63470
+      },
+      {
+        "frame": 42,
+        "playback_second": 10.5,
+        "mask_count": 1,
+        "area_pixels": 63486
+      },
+      {
+        "frame": 43,
+        "playback_second": 10.75,
+        "mask_count": 1,
+        "area_pixels": 63447
+      },
+      {
+        "frame": 44,
+        "playback_second": 11.0,
+        "mask_count": 1,
+        "area_pixels": 63446
+      },
+      {
+        "frame": 45,
+        "playback_second": 11.25,
+        "mask_count": 1,
+        "area_pixels": 63400
+      },
+      {
+        "frame": 46,
+        "playback_second": 11.5,
+        "mask_count": 1,
+        "area_pixels": 63386
+      },
+      {
+        "frame": 47,
+        "playback_second": 11.75,
+        "mask_count": 1,
+        "area_pixels": 63364
+      },
+      {
+        "frame": 48,
+        "playback_second": 12.0,
+        "mask_count": 1,
+        "area_pixels": 63497
+      },
+      {
+        "frame": 49,
+        "playback_second": 12.25,
+        "mask_count": 1,
+        "area_pixels": 63233
+      },
+      {
+        "frame": 50,
+        "playback_second": 12.5,
+        "mask_count": 1,
+        "area_pixels": 63219
+      },
+      {
+        "frame": 51,
+        "playback_second": 12.75,
+        "mask_count": 1,
+        "area_pixels": 63241
+      },
+      {
+        "frame": 52,
+        "playback_second": 13.0,
+        "mask_count": 1,
+        "area_pixels": 63225
+      },
+      {
+        "frame": 53,
+        "playback_second": 13.25,
+        "mask_count": 1,
+        "area_pixels": 63221
+      },
+      {
+        "frame": 54,
+        "playback_second": 13.5,
+        "mask_count": 1,
+        "area_pixels": 63123
+      },
+      {
+        "frame": 55,
+        "playback_second": 13.75,
+        "mask_count": 1,
+        "area_pixels": 63175
+      },
+      {
+        "frame": 56,
+        "playback_second": 14.0,
+        "mask_count": 1,
+        "area_pixels": 63159
+      },
+      {
+        "frame": 57,
+        "playback_second": 14.25,
+        "mask_count": 1,
+        "area_pixels": 63068
+      },
+      {
+        "frame": 58,
+        "playback_second": 14.5,
+        "mask_count": 1,
+        "area_pixels": 63064
+      },
+      {
+        "frame": 59,
+        "playback_second": 14.75,
+        "mask_count": 1,
+        "area_pixels": 63008
+      },
+      {
+        "frame": 60,
+        "playback_second": 15.0,
+        "mask_count": 1,
+        "area_pixels": 62933
+      },
+      {
+        "frame": 61,
+        "playback_second": 15.25,
+        "mask_count": 1,
+        "area_pixels": 62931
+      },
+      {
+        "frame": 62,
+        "playback_second": 15.5,
+        "mask_count": 1,
+        "area_pixels": 62914
+      },
+      {
+        "frame": 63,
+        "playback_second": 15.75,
+        "mask_count": 1,
+        "area_pixels": 62881
+      },
+      {
+        "frame": 64,
+        "playback_second": 16.0,
+        "mask_count": 1,
+        "area_pixels": 63039
+      },
+      {
+        "frame": 65,
+        "playback_second": 16.25,
+        "mask_count": 1,
+        "area_pixels": 62813
+      },
+      {
+        "frame": 66,
+        "playback_second": 16.5,
+        "mask_count": 1,
+        "area_pixels": 62787
+      },
+      {
+        "frame": 67,
+        "playback_second": 16.75,
+        "mask_count": 1,
+        "area_pixels": 62796
+      },
+      {
+        "frame": 68,
+        "playback_second": 17.0,
+        "mask_count": 1,
+        "area_pixels": 62768
+      },
+      {
+        "frame": 69,
+        "playback_second": 17.25,
+        "mask_count": 1,
+        "area_pixels": 62745
+      },
+      {
+        "frame": 70,
+        "playback_second": 17.5,
+        "mask_count": 1,
+        "area_pixels": 62748
+      },
+      {
+        "frame": 71,
+        "playback_second": 17.75,
+        "mask_count": 1,
+        "area_pixels": 62703
+      },
+      {
+        "frame": 72,
+        "playback_second": 18.0,
+        "mask_count": 1,
+        "area_pixels": 62667
+      },
+      {
+        "frame": 73,
+        "playback_second": 18.25,
+        "mask_count": 1,
+        "area_pixels": 62653
+      },
+      {
+        "frame": 74,
+        "playback_second": 18.5,
+        "mask_count": 1,
+        "area_pixels": 62589
+      },
+      {
+        "frame": 75,
+        "playback_second": 18.75,
+        "mask_count": 1,
+        "area_pixels": 62577
+      },
+      {
+        "frame": 76,
+        "playback_second": 19.0,
+        "mask_count": 1,
+        "area_pixels": 62478
+      },
+      {
+        "frame": 77,
+        "playback_second": 19.25,
+        "mask_count": 1,
+        "area_pixels": 62510
+      },
+      {
+        "frame": 78,
+        "playback_second": 19.5,
+        "mask_count": 1,
+        "area_pixels": 62458
+      },
+      {
+        "frame": 79,
+        "playback_second": 19.75,
+        "mask_count": 1,
+        "area_pixels": 62427
+      },
+      {
+        "frame": 80,
+        "playback_second": 20.0,
+        "mask_count": 1,
+        "area_pixels": 62563
+      },
+      {
+        "frame": 81,
+        "playback_second": 20.25,
+        "mask_count": 1,
+        "area_pixels": 62269
+      },
+      {
+        "frame": 82,
+        "playback_second": 20.5,
+        "mask_count": 1,
+        "area_pixels": 62246
+      },
+      {
+        "frame": 83,
+        "playback_second": 20.75,
+        "mask_count": 1,
+        "area_pixels": 62218
+      },
+      {
+        "frame": 84,
+        "playback_second": 21.0,
+        "mask_count": 1,
+        "area_pixels": 62168
+      },
+      {
+        "frame": 85,
+        "playback_second": 21.25,
+        "mask_count": 1,
+        "area_pixels": 62144
+      },
+      {
+        "frame": 86,
+        "playback_second": 21.5,
+        "mask_count": 1,
+        "area_pixels": 62127
+      },
+      {
+        "frame": 87,
+        "playback_second": 21.75,
+        "mask_count": 1,
+        "area_pixels": 62066
+      },
+      {
+        "frame": 88,
+        "playback_second": 22.0,
+        "mask_count": 1,
+        "area_pixels": 62026
+      },
+      {
+        "frame": 89,
+        "playback_second": 22.25,
+        "mask_count": 1,
+        "area_pixels": 62002
+      },
+      {
+        "frame": 90,
+        "playback_second": 22.5,
+        "mask_count": 1,
+        "area_pixels": 61923
+      },
+      {
+        "frame": 91,
+        "playback_second": 22.75,
+        "mask_count": 1,
+        "area_pixels": 61930
+      },
+      {
+        "frame": 92,
+        "playback_second": 23.0,
+        "mask_count": 1,
+        "area_pixels": 61915
+      },
+      {
+        "frame": 93,
+        "playback_second": 23.25,
+        "mask_count": 1,
+        "area_pixels": 62094
+      },
+      {
+        "frame": 94,
+        "playback_second": 23.5,
+        "mask_count": 1,
+        "area_pixels": 61806
+      },
+      {
+        "frame": 95,
+        "playback_second": 23.75,
+        "mask_count": 1,
+        "area_pixels": 61976
+      },
+      {
+        "frame": 96,
+        "playback_second": 24.0,
+        "mask_count": 1,
+        "area_pixels": 61692
+      },
+      {
+        "frame": 97,
+        "playback_second": 24.25,
+        "mask_count": 1,
+        "area_pixels": 61621
+      },
+      {
+        "frame": 98,
+        "playback_second": 24.5,
+        "mask_count": 1,
+        "area_pixels": 61321
+      },
+      {
+        "frame": 99,
+        "playback_second": 24.75,
+        "mask_count": 1,
+        "area_pixels": 61533
+      },
+      {
+        "frame": 100,
+        "playback_second": 25.0,
+        "mask_count": 1,
+        "area_pixels": 61288
+      },
+      {
+        "frame": 101,
+        "playback_second": 25.25,
+        "mask_count": 1,
+        "area_pixels": 61256
+      },
+      {
+        "frame": 102,
+        "playback_second": 25.5,
+        "mask_count": 1,
+        "area_pixels": 61255
+      },
+      {
+        "frame": 103,
+        "playback_second": 25.75,
+        "mask_count": 1,
+        "area_pixels": 61388
+      },
+      {
+        "frame": 104,
+        "playback_second": 26.0,
+        "mask_count": 1,
+        "area_pixels": 61348
+      },
+      {
+        "frame": 105,
+        "playback_second": 26.25,
+        "mask_count": 1,
+        "area_pixels": 61254
+      },
+      {
+        "frame": 106,
+        "playback_second": 26.5,
+        "mask_count": 1,
+        "area_pixels": 61287
+      },
+      {
+        "frame": 107,
+        "playback_second": 26.75,
+        "mask_count": 1,
+        "area_pixels": 61258
+      },
+      {
+        "frame": 108,
+        "playback_second": 27.0,
+        "mask_count": 1,
+        "area_pixels": 61177
+      },
+      {
+        "frame": 109,
+        "playback_second": 27.25,
+        "mask_count": 1,
+        "area_pixels": 61081
+      }
+    ],
+    "frames_with_masks": 110,
+    "diagnostics": []
+  },
+  "wonder": {
+    "plan": "**Batch VIDEO-TOMATO-01 — read-only plan based on supplied history**\n\nNo action is claimed as performed. This is a proposed next inspection step only.\n\n### Earlier vs. later comparison\n\n- **Playback 0–4 sec — mild:** Localized small dark spots near the stem and a small white fuzzy-appearing patch to the right of the stem. The rest of the red skin looked glossy, round, and full in the fixed front-top view. `visual_priority_points: 35`\n- **Playback 8–20 sec — clear:** The light gray fuzzy-appearing/textured area around the stem became slightly larger, denser, more continuous, and spread across more of the top shoulder, with dark margins/pits and increasing surface unevenness. `visual_priority_points: 70`\n- **Playback 24–27 sec — severe (visual concern only):** Extensive dense gray textured coverage across the upper surface, deeper-appearing sunken pits around the stem, wrinkling on the right shoulder, and the upper shape looking collapsed inward in this single view. The lower body remained red. `visual_priority_points: 100`\n\n`combined_score` is null throughout, so no combined visual + sensor score is available.\n\n### Evidence limits\n\n- Single fixed front-top view only; underside, rear, and interior were not visible.\n- No odor, texture, or internal data available.\n- `sensor_status: not_measured` at every observation; `sensor_session: null`\n- `sensor_protocol.characterized: false`\n- `physical_group_tests: unavailable_in_video`\n- Elapsed storage time is unknown — playback seconds 0–27 are not hours/days.\n- Source is model observations from a public timelapse demo, not a vendor trial.\n- `stock_disposition_authorized: false` — no food-safety or keep/discard decision is made here.\n\n### Proposed next inspection step\n\nIf continued observation is available, re-check from the same fixed front-top view for:\n1. Further spread or densification of the top gray textured zone\n2. Change in the sunken pits, right-shoulder wrinkling, or top contour collapse\n3. Any visible surface leakage in that view\n\nAlternate views of the underside/rear would be needed to assess extent beyond the supplied angle, if such views can be provided.\n\n### Missing-evidence request\n\nSensor evidence is missing. Because the sensor protocol timing is **uncharacterized**, I am not proposing an exact measurement schedule or procedure. Please provide characterization of the sensor protocol first, and then a sensor measurement obtained under that characterized protocol if available, so it can be considered alongside the visual history.",
+    "tool_trace": [
+      {
+        "name": "get_batch_history",
+        "arguments": {
+          "batch_id": "VIDEO-TOMATO-01"
+        },
+        "status": "completed",
+        "data_source": "real_model_observations_from_public_timelapse_demo_not_vendor_trial"
+      }
+    ],
+    "elapsed_seconds": 21.01,
+    "calls": [
+      {
+        "response_id": "resp_6ae74da0a0aaeaba9a044275",
+        "model": "muse-wonder-1.0",
+        "usage": {
+          "input_tokens": 569,
+          "input_tokens_details": {
+            "cache_write_tokens": null,
+            "cached_tokens": 116
+          },
+          "output_tokens": 284,
+          "output_tokens_details": {
+            "reasoning_tokens": 195
+          },
+          "total_tokens": 853
+        }
+      },
+      {
+        "response_id": "resp_6ae74db215b50d9df707445e",
+        "model": "muse-wonder-1.0",
+        "usage": {
+          "input_tokens": 1930,
+          "input_tokens_details": {
+            "cache_write_tokens": null,
+            "cached_tokens": 0
+          },
+          "output_tokens": 2028,
+          "output_tokens_details": {
+            "reasoning_tokens": 1475
+          },
+          "total_tokens": 3958
+        }
+      }
+    ]
+  }
+}

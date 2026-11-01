@@ -7,9 +7,21 @@ replay of actual model outputs, not a production vendor app or a browser API-key
 form. The product name remains undecided. The Site has its own source repository;
 the parent application's `main` branch is not used for deployment.
 
-`index.html`, `style.css` and `app.js` are the buildless presentation source.
-Generated video, masks, raw responses and credentials are not stored in this folder.
-The export script assembles an isolated static directory from the recorded run.
+This folder is a self-contained recorded demo: HTML/CSS/JavaScript, original source
+video, analysis copy, SAM overlay movie, synthetic request audio, checkpoint stills
+and sanitized model-result JSON are tracked together. No key is required for replay.
+Raw provider responses and credentials are not included.
+
+## Replay the checked-in results without model calls
+
+```powershell
+python scripts/smoke/preview_video_site.py --directory demos/video-model-flow
+```
+
+Open the printed localhost URL. The range-capable server supports MP4 seeking.
+The private hosted link is optional; this local replay needs no sign-in or API key.
+The [narrated walkthrough](../../docs/media/model_lab_walkthrough.mp4) can also be
+watched directly without running a server.
 
 ## Reproduce the analysis
 
@@ -54,3 +66,10 @@ Selected license: CC BY-SA 3.0, https://creativecommons.org/licenses/by-sa/3.0/ 
 Changes: resized to 640 pixels, resampled to 4 fps, frames extracted and model
 mask overlays added. Derived media is distributed under the same license.
 No endorsement is implied. Attribution is also visible in the hosted demo.
+
+`source.webm` is the original downloaded work. `sample.mp4` is the resized analysis
+copy; `overlay.mp4` adds the actual decoded masks. `checkpoint_*.jpg` and
+`checkpoint_overlay_*.jpg` are original/overlay stills at the eight checkpoints.
+`voice_request.wav` is locally synthesized demonstration speech, not source audio.
+`demo_data.json` is the sanitized recorded model-run bundle. Preserve attribution
+when redistributing source or derived media.
