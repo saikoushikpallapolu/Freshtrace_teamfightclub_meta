@@ -1,0 +1,1517 @@
+{
+  "date_utc": "2026-11-02T18:09:12.130034+00:00",
+  "batch_id": "6c652a71-aa35-4287-bb23-1f45e46808b8",
+  "assessment": "Integration test; no independent reference masks or item labels",
+  "samples": [
+    {
+      "sample": {
+        "sample_id": "mixed_mold",
+        "title": "Mixed visible condition",
+        "author": "JIP",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Moldy_tomatoes.jpg",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "description": "Real packed tomatoes with mold visible on some items. Occlusion and partial objects make this a challenging example.",
+        "changes": "Original bytes retained; prototype produces resized analysis images, contextual crops and overlays under the same image license.",
+        "reference_labels": "not independently annotated",
+        "sha256": "db3824f1a93653a01eea1809105ead7183b5e8535ac2967f8443c4bc2bdf34e0"
+      },
+      "observation_id": "d4fa9e2d-6c1b-524b-8569-21425fcf57ec",
+      "job": {
+        "job_id": "35438aaf-3fc2-475d-8bd3-c6049bd0ece1",
+        "observation_id": "d4fa9e2d-6c1b-524b-8569-21425fcf57ec",
+        "status": "complete",
+        "attempt": 2,
+        "created_at": "2026-11-02T18:05:45.070710+00:00",
+        "updated_at": "2026-11-02T18:08:55.874434+00:00",
+        "result": {
+          "width": 1280,
+          "height": 960,
+          "prompt_version": "tomato-items-v2",
+          "objects": [
+            {
+              "object_id": "T01",
+              "bounds": [
+                1210,
+                0,
+                1280,
+                63
+              ],
+              "foreground_pixels": 3627,
+              "mask_file": "mask_000.png",
+              "provider_object_id": "0",
+              "crop_file": "crop_000.jpg",
+              "category": "unclear",
+              "observations": [
+                "Only small partial red area visible in crop",
+                "Crop is low-resolution and blurred with no surface detail",
+                "No mold-like growth, wrinkle, or breakdown can be confirmed"
+              ],
+              "visibility_limits": [
+                "Target largely outside frame and occluded",
+                "Heavy blur and low resolution limit assessment",
+                "Underside and adjacent sides hidden"
+              ]
+            },
+            {
+              "object_id": "T02",
+              "bounds": [
+                814,
+                629,
+                1081,
+                888
+              ],
+              "foreground_pixels": 51811,
+              "mask_file": "mask_001.png",
+              "provider_object_id": "1",
+              "crop_file": "crop_001.jpg",
+              "category": "inspect",
+              "observations": [
+                "Visible depressed area with linear creases and wrinkled texture on upper surface",
+                "Glossy reflection across the wrinkled zone",
+                "Small pale fringe at top edge adjacent to neighboring fruit"
+              ],
+              "visibility_limits": [
+                "Lower portion partly occluded by foreground tomato",
+                "Underside and rear sides hidden",
+                "Side contact areas not visible"
+              ]
+            },
+            {
+              "object_id": "T03",
+              "bounds": [
+                1057,
+                864,
+                1280,
+                960
+              ],
+              "foreground_pixels": 16179,
+              "mask_file": "mask_002.png",
+              "provider_object_id": "2",
+              "crop_file": "crop_002.jpg",
+              "category": "unclear",
+              "observations": [
+                "Only narrow curved top edge of red surface visible",
+                "Surface appears smooth but out of focus",
+                "No distinct mold-like or wrinkled feature in visible sliver"
+              ],
+              "visibility_limits": [
+                "Majority of tomato occluded outside view",
+                "Blur limits detail",
+                "Underside and sides hidden"
+              ]
+            },
+            {
+              "object_id": "T04",
+              "bounds": [
+                728,
+                224,
+                887,
+                331
+              ],
+              "foreground_pixels": 7868,
+              "mask_file": "mask_003.png",
+              "provider_object_id": "3",
+              "crop_file": "crop_003.jpg",
+              "category": "unclear",
+              "observations": [
+                "Central area shows dark gap with out-of-focus red surfaces on sides",
+                "Pale filamentous material visible at lower left of crop",
+                "Cannot determine if filament belongs to target or neighboring fruit"
+              ],
+              "visibility_limits": [
+                "Target boundaries ambiguous in crop",
+                "Adjacent tomatoes occlude view",
+                "Underside and rear surfaces hidden"
+              ]
+            },
+            {
+              "object_id": "T05",
+              "bounds": [
+                0,
+                472,
+                78,
+                617
+              ],
+              "foreground_pixels": 5716,
+              "mask_file": "mask_004.png",
+              "provider_object_id": "4",
+              "crop_file": "crop_004.jpg",
+              "category": "unclear",
+              "observations": [
+                "Only narrow vertical red strip visible",
+                "Flat red appearance with no discernible texture",
+                "Insufficient area to assess surface condition"
+              ],
+              "visibility_limits": [
+                "Most of target outside crop and occluded",
+                "Narrow view limits assessment",
+                "Underside and other sides hidden"
+              ]
+            },
+            {
+              "object_id": "T06",
+              "bounds": [
+                0,
+                544,
+                211,
+                768
+              ],
+              "foreground_pixels": 31308,
+              "mask_file": "mask_005.png",
+              "provider_object_id": "5",
+              "crop_file": "crop_005.jpg",
+              "category": "unclear",
+              "observations": [
+                "Large blurred red area without distinct features",
+                "Highlight suggests curvature but detail lacking",
+                "No clear mold-like or wrinkled feature discernible"
+              ],
+              "visibility_limits": [
+                "Heavy blur limits surface detail",
+                "Occlusion by neighboring tomatoes",
+                "Underside hidden"
+              ]
+            },
+            {
+              "object_id": "T07",
+              "bounds": [
+                515,
+                278,
+                787,
+                544
+              ],
+              "foreground_pixels": 44111,
+              "mask_file": "mask_006.png",
+              "provider_object_id": "6",
+              "crop_file": "crop_006.jpg",
+              "category": "inspect",
+              "observations": [
+                "Distinct wrinkled indented area on upper surface with fine creases",
+                "Glossy highlight across indentation",
+                "Filamentous material at right edge and bottom from adjacent fruit"
+              ],
+              "visibility_limits": [
+                "Lower edge partly occluded by foreground fruit",
+                "Underside and rear hidden",
+                "Side contact areas not visible"
+              ]
+            },
+            {
+              "object_id": "T08",
+              "bounds": [
+                408,
+                11,
+                530,
+                110
+              ],
+              "foreground_pixels": 5249,
+              "mask_file": "mask_007.png",
+              "provider_object_id": "7",
+              "crop_file": "crop_007.jpg",
+              "category": "unclear",
+              "observations": [
+                "Crop shows dark gap between two red curved edges",
+                "No clear centered tomato surface",
+                "No assessable target surface detail"
+              ],
+              "visibility_limits": [
+                "View appears to be gap rather than exposed surface",
+                "Adjacent fruits occlude view",
+                "Main surfaces hidden"
+              ]
+            },
+            {
+              "object_id": "T09",
+              "bounds": [
+                0,
+                197,
+                32,
+                251
+              ],
+              "foreground_pixels": 1080,
+              "mask_file": "mask_008.png",
+              "provider_object_id": "8",
+              "crop_file": "crop_008.jpg",
+              "category": "unclear",
+              "observations": [
+                "Crop shows tiny dark corner with minimal red area",
+                "No discernible tomato surface texture",
+                "Insufficient detail for assessment"
+              ],
+              "visibility_limits": [
+                "Target largely outside view",
+                "Framing and resolution prevent assessment",
+                "All main surfaces hidden"
+              ]
+            },
+            {
+              "object_id": "T10",
+              "bounds": [
+                1236,
+                672,
+                1280,
+                898
+              ],
+              "foreground_pixels": 7168,
+              "mask_file": "mask_009.png",
+              "provider_object_id": "9",
+              "crop_file": "crop_009.jpg",
+              "category": "unclear",
+              "observations": [
+                "Only narrow vertical dark-red edge visible",
+                "No surface texture or defect discernible",
+                "Insufficient area for assessment"
+              ],
+              "visibility_limits": [
+                "Target mostly occluded and out of frame",
+                "Edge-only view",
+                "Underside and front surfaces hidden"
+              ]
+            },
+            {
+              "object_id": "T11",
+              "bounds": [
+                562,
+                521,
+                821,
+                823
+              ],
+              "foreground_pixels": 26429,
+              "mask_file": "mask_010.png",
+              "provider_object_id": "10",
+              "crop_file": "crop_010.jpg",
+              "category": "inspect",
+              "observations": [
+                "Dense white fluffy filamentous material covering top",
+                "Filamentous tufts also along right side",
+                "Underlying red surface with pale circular margin"
+              ],
+              "visibility_limits": [
+                "Lower portion occluded by foreground tomato",
+                "Underside hidden",
+                "Rear contact area not visible"
+              ]
+            },
+            {
+              "object_id": "T12",
+              "bounds": [
+                1167,
+                633,
+                1280,
+                867
+              ],
+              "foreground_pixels": 15008,
+              "mask_file": "mask_011.png",
+              "provider_object_id": "11",
+              "crop_file": "crop_011.jpg",
+              "category": "unclear",
+              "observations": [
+                "Narrow vertical view of curved dark-red side",
+                "Uniformly red with no distinct features in view",
+                "Limited area prevents full assessment"
+              ],
+              "visibility_limits": [
+                "Most of fruit occluded by neighbors",
+                "Side-only view",
+                "Underside and top hidden"
+              ]
+            },
+            {
+              "object_id": "T13",
+              "bounds": [
+                439,
+                813,
+                756,
+                960
+              ],
+              "foreground_pixels": 31471,
+              "mask_file": "mask_012.png",
+              "provider_object_id": "12",
+              "crop_file": "crop_012.jpg",
+              "category": "unclear",
+              "observations": [
+                "Highly blurred orange-red rounded surface",
+                "Bright highlight but no surface detail",
+                "No distinct defect discernible"
+              ],
+              "visibility_limits": [
+                "Heavy blur limits assessment",
+                "Edges occluded by neighboring fruits",
+                "Underside hidden"
+              ]
+            },
+            {
+              "object_id": "T14",
+              "bounds": [
+                0,
+                747,
+                314,
+                960
+              ],
+              "foreground_pixels": 50977,
+              "mask_file": "mask_013.png",
+              "provider_object_id": "13",
+              "crop_file": "crop_013.jpg",
+              "category": "unclear",
+              "observations": [
+                "Blurred red rounded surface with soft highlights",
+                "No distinct mold-like or wrinkled features in visible area",
+                "Detail limited by blur"
+              ],
+              "visibility_limits": [
+                "Out of focus limits detail",
+                "Edges occluded by neighbors",
+                "Underside hidden"
+              ]
+            },
+            {
+              "object_id": "T15",
+              "bounds": [
+                259,
+                291,
+                608,
+                605
+              ],
+              "foreground_pixels": 71218,
+              "mask_file": "mask_014.png",
+              "provider_object_id": "14",
+              "crop_file": "crop_014.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Smooth glossy red surface with highlights",
+                "Small pale stem scar visible on left side",
+                "No mold-like growth, wrinkle, or breakdown on visible target surface"
+              ],
+              "visibility_limits": [
+                "Lower and rear portions occluded by neighbors",
+                "Underside hidden",
+                "Adjacent fuzzy material belongs to neighboring fruit"
+              ]
+            },
+            {
+              "object_id": "T16",
+              "bounds": [
+                0,
+                234,
+                293,
+                546
+              ],
+              "foreground_pixels": 75463,
+              "mask_file": "mask_015.png",
+              "provider_object_id": "15",
+              "crop_file": "crop_015.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Smooth orange-red rounded surface with highlight",
+                "No mold-like growth, wrinkle, or breakdown on visible surface",
+                "Cardboard edge visible in background, not part of fruit"
+              ],
+              "visibility_limits": [
+                "Lower portion and rear occluded",
+                "Underside hidden",
+                "Contact areas with neighbors not visible"
+              ]
+            },
+            {
+              "object_id": "T17",
+              "bounds": [
+                145,
+                508,
+                502,
+                850
+              ],
+              "foreground_pixels": 94279,
+              "mask_file": "mask_016.png",
+              "provider_object_id": "16",
+              "crop_file": "crop_016.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Smooth glossy red rounded surface",
+                "Small dark dot near bottom, no mold-like tufts or wrinkles",
+                "No breakdown or wrinkled area on visible surface"
+              ],
+              "visibility_limits": [
+                "Top and sides partly occluded by neighbors",
+                "Underside hidden",
+                "Rear contact areas not visible"
+              ]
+            },
+            {
+              "object_id": "T18",
+              "bounds": [
+                934,
+                370,
+                1236,
+                709
+              ],
+              "foreground_pixels": 60527,
+              "mask_file": "mask_017.png",
+              "provider_object_id": "17",
+              "crop_file": "crop_017.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Smooth red surface with soft shading and small highlight",
+                "No mold-like growth, wrinkle, or breakdown on visible target area",
+                "Wrinkled surface at bottom left belongs to neighboring fruit"
+              ],
+              "visibility_limits": [
+                "Edges occluded by adjacent tomatoes",
+                "Underside hidden",
+                "Top partially in shadow"
+              ]
+            },
+            {
+              "object_id": "T19",
+              "bounds": [
+                277,
+                883,
+                572,
+                960
+              ],
+              "foreground_pixels": 14447,
+              "mask_file": "mask_018.png",
+              "provider_object_id": "18",
+              "crop_file": "crop_018.jpg",
+              "category": "unclear",
+              "observations": [
+                "Thin horizontal blurred red band visible",
+                "No surface texture or detail discernible",
+                "Insufficient detail for assessment"
+              ],
+              "visibility_limits": [
+                "Target largely occluded and out of focus",
+                "Only sliver visible",
+                "Underside and most surfaces hidden"
+              ]
+            },
+            {
+              "object_id": "T20",
+              "bounds": [
+                186,
+                2,
+                490,
+                314
+              ],
+              "foreground_pixels": 71366,
+              "mask_file": "mask_019.png",
+              "provider_object_id": "19",
+              "crop_file": "crop_019.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Smooth glossy red surface with highlights",
+                "Brownish stem scar at upper left",
+                "No mold-like growth, wrinkle, or breakdown on visible surface"
+              ],
+              "visibility_limits": [
+                "Lower edge occluded by foreground fruit",
+                "Underside hidden",
+                "Side contact areas not visible"
+              ]
+            },
+            {
+              "object_id": "T21",
+              "bounds": [
+                272,
+                807,
+                456,
+                910
+              ],
+              "foreground_pixels": 8992,
+              "mask_file": "mask_020.png",
+              "provider_object_id": "20",
+              "crop_file": "crop_020.jpg",
+              "category": "unclear",
+              "observations": [
+                "Narrow blurred view of dark gap with red above and below",
+                "No clear target surface detail",
+                "Insufficient area for assessment"
+              ],
+              "visibility_limits": [
+                "View dominated by shadow and blur",
+                "Target boundaries ambiguous",
+                "Main surfaces hidden"
+              ]
+            },
+            {
+              "object_id": "T22",
+              "bounds": [
+                772,
+                242,
+                1045,
+                526
+              ],
+              "foreground_pixels": 60261,
+              "mask_file": "mask_021.png",
+              "provider_object_id": "21",
+              "crop_file": "crop_021.jpg",
+              "category": "inspect",
+              "observations": [
+                "White fluffy filamentous material on left side near scar",
+                "Pale patch at attachment point",
+                "Glossy red surface elsewhere on visible face"
+              ],
+              "visibility_limits": [
+                "Lower and right edges occluded by neighbors",
+                "Underside hidden",
+                "Rear contact area not visible"
+              ]
+            },
+            {
+              "object_id": "T23",
+              "bounds": [
+                1151,
+                297,
+                1280,
+                635
+              ],
+              "foreground_pixels": 32323,
+              "mask_file": "mask_022.png",
+              "provider_object_id": "22",
+              "crop_file": "crop_022.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Smooth curved red side profile",
+                "Uniform red with no mold-like or wrinkled features in view",
+                "No breakdown visible on exposed edge"
+              ],
+              "visibility_limits": [
+                "Only side profile visible",
+                "Front, top, and underside hidden by neighbors and box",
+                "Limited viewing angle"
+              ]
+            },
+            {
+              "object_id": "T24",
+              "bounds": [
+                721,
+                829,
+                1033,
+                960
+              ],
+              "foreground_pixels": 29223,
+              "mask_file": "mask_023.png",
+              "provider_object_id": "23",
+              "crop_file": "crop_023.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Smooth glossy red top with highlight",
+                "No mold-like growth, wrinkle, or breakdown on visible area",
+                "Background gap and neighboring fruit not part of target"
+              ],
+              "visibility_limits": [
+                "Lower edge cropped and occluded",
+                "Underside hidden",
+                "Blur limits fine detail"
+              ]
+            },
+            {
+              "object_id": "T25",
+              "bounds": [
+                442,
+                583,
+                760,
+                861
+              ],
+              "foreground_pixels": 59209,
+              "mask_file": "mask_024.png",
+              "provider_object_id": "24",
+              "crop_file": "crop_024.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Smooth glossy red rounded surface",
+                "No mold-like growth, wrinkle, or breakdown on visible target surface",
+                "Filamentous material in background belongs to neighboring fruit"
+              ],
+              "visibility_limits": [
+                "Edges occluded by neighboring fruits",
+                "Underside hidden",
+                "Rear contact areas not visible"
+              ]
+            },
+            {
+              "object_id": "T26",
+              "bounds": [
+                0,
+                0,
+                141,
+                201
+              ],
+              "foreground_pixels": 24913,
+              "mask_file": "mask_025.png",
+              "provider_object_id": "25",
+              "crop_file": "crop_025.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Dark reddish smooth curved surface",
+                "No mold-like growth, wrinkle, or breakdown discernible in view",
+                "Highlight at top edge"
+              ],
+              "visibility_limits": [
+                "Low light and shadow limit detail",
+                "Portions occluded by box edge",
+                "Underside and opposite side hidden"
+              ]
+            },
+            {
+              "object_id": "T27",
+              "bounds": [
+                481,
+                23,
+                762,
+                311
+              ],
+              "foreground_pixels": 64307,
+              "mask_file": "mask_026.png",
+              "provider_object_id": "26",
+              "crop_file": "crop_026.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Smooth round glossy red surface with highlights",
+                "Small stem scar centered on face",
+                "No mold-like growth, wrinkle, or breakdown on visible surface"
+              ],
+              "visibility_limits": [
+                "Lower portion occluded by foreground fruit",
+                "Underside hidden",
+                "Side contacts not visible"
+              ]
+            },
+            {
+              "object_id": "T28",
+              "bounds": [
+                720,
+                131,
+                815,
+                276
+              ],
+              "foreground_pixels": 5823,
+              "mask_file": "mask_027.png",
+              "provider_object_id": "27",
+              "crop_file": "crop_027.jpg",
+              "category": "unclear",
+              "observations": [
+                "Narrow vertical view of dark gap between red edges",
+                "No clear target surface centered",
+                "No assessable surface detail"
+              ],
+              "visibility_limits": [
+                "Target appears as gap with edge fragments",
+                "Neighbors occlude view",
+                "Main surfaces hidden"
+              ]
+            }
+          ],
+          "scene_limits": [
+            "Dense pile with extensive overlap occludes undersides and contact areas",
+            "Variable focus and blur in crops limit fine surface detail",
+            "Uneven warm lighting with glare highlights and deep shadows",
+            "Cardboard packaging occludes top and side portions",
+            "Printed text on packaging treated as untrusted and not used"
+          ],
+          "mode": "live_meta",
+          "sensor": null
+        },
+        "error_code": null
+      },
+      "reviews": [
+        {
+          "object_id": "T11",
+          "category": "inspect",
+          "note": "UI TEST ONLY: review form verified on a public photograph. Not an independent human or physical inspection.",
+          "created_at": "2026-11-02T18:16:48.511828+00:00",
+          "review_id": "85e6d358-1d71-4024-84ac-7ec4d6c3fe94"
+        }
+      ],
+      "calls": [
+        {
+          "model": "sam-3.1",
+          "prompt_version": "tomato-items-v1",
+          "response_id": "resp_6ae8d0fd4abccf430f6f4035",
+          "status": "succeeded",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 6365
+        },
+        {
+          "model": "sam-3.1",
+          "prompt_version": "tomato-items-v2",
+          "response_id": "resp_6ae8d189ca5f583a3b03447c",
+          "status": "succeeded",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 4018
+        },
+        {
+          "model": "muse-spark-1.3",
+          "prompt_version": "tomato-items-v2",
+          "response_id": "resp_6ae8d1b5bab57155fffa4c5b",
+          "status": "succeeded",
+          "input_tokens": 5628,
+          "output_tokens": 6784,
+          "latency_ms": 35464
+        }
+      ],
+      "overlay_download_bytes": 282732,
+      "category_counts": {
+        "inspect": 4,
+        "no_visible_concern": 10,
+        "unclear": 14
+      },
+      "overlay_file": "../assets/prototype_mixed_mold_overlay.jpg"
+    },
+    {
+      "sample": {
+        "sample_id": "market_discard",
+        "title": "Visible damage comparison",
+        "author": "Gideon",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Rotten_tomatoes.jpg",
+        "license": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "description": "Two damaged tomatoes after a market. Tests obvious appearance concerns, not a balanced fresh/rotten benchmark.",
+        "changes": "Original bytes retained; prototype produces resized analysis images, contextual crops and overlays under the same image license.",
+        "reference_labels": "not independently annotated",
+        "sha256": "e9b528276fe755fb2ac0c1af7527614687b2d7ca8a90427cbf151c29d6c6a7be"
+      },
+      "observation_id": "db3d9434-f49f-5ef6-9923-8aed4dda72c3",
+      "job": {
+        "job_id": "1ffcbe81-146d-4964-9f03-6c7d5e1a647c",
+        "observation_id": "db3d9434-f49f-5ef6-9923-8aed4dda72c3",
+        "status": "complete",
+        "attempt": 1,
+        "created_at": "2026-11-02T18:09:12.429259+00:00",
+        "updated_at": "2026-11-02T18:09:27.989272+00:00",
+        "result": {
+          "width": 1000,
+          "height": 530,
+          "prompt_version": "tomato-items-v2",
+          "objects": [
+            {
+              "object_id": "T01",
+              "bounds": [
+                471,
+                130,
+                975,
+                416
+              ],
+              "foreground_pixels": 118274,
+              "mask_file": "mask_000.png",
+              "provider_object_id": "0",
+              "crop_file": "crop_000.jpg",
+              "category": "inspect",
+              "observations": [
+                "Visible front and top red skin shows widespread wrinkling, creasing and collapsed texture",
+                "Surface appears glossy and wet with distorted highlights",
+                "Small light-colored specks visible on skin"
+              ],
+              "visibility_limits": [
+                "Rear side and underside in contact with ground not visible",
+                "Interior not visible in this view",
+                "Left edge overlapped by adjacent tomato not visible"
+              ]
+            },
+            {
+              "object_id": "T02",
+              "bounds": [
+                16,
+                36,
+                541,
+                404
+              ],
+              "foreground_pixels": 144477,
+              "mask_file": "mask_001.png",
+              "provider_object_id": "1",
+              "crop_file": "crop_001.jpg",
+              "category": "inspect",
+              "observations": [
+                "Large open cavity on upper side exposing interior pulp and seeds",
+                "Surrounding red skin shows pronounced wrinkling, creasing and collapsed appearance",
+                "Surface appears glossy and wet around the opening"
+              ],
+              "visibility_limits": [
+                "Rear side and underside in contact with ground not visible",
+                "Right edge overlapped by adjacent tomato not visible"
+              ]
+            }
+          ],
+          "scene_limits": [
+            "Low eye-level viewpoint limits view of tops and undersides",
+            "Contact surfaces with rough ground are obscured",
+            "Background is out of focus limiting distant detail",
+            "Only the camera-facing sides of the two foreground tomatoes are shown"
+          ],
+          "mode": "live_meta",
+          "sensor": null
+        },
+        "error_code": null
+      },
+      "reviews": [],
+      "calls": [
+        {
+          "model": "sam-3.1",
+          "prompt_version": "tomato-items-v2",
+          "response_id": "resp_6ae8d1cade9ad2772e5840ec",
+          "status": "succeeded",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 2380
+        },
+        {
+          "model": "muse-spark-1.3",
+          "prompt_version": "tomato-items-v2",
+          "response_id": "resp_6ae8d1d6b587f18bfa574267",
+          "status": "succeeded",
+          "input_tokens": 1392,
+          "output_tokens": 1623,
+          "latency_ms": 10074
+        }
+      ],
+      "overlay_download_bytes": 168958,
+      "category_counts": {
+        "inspect": 2,
+        "no_visible_concern": 0,
+        "unclear": 0
+      },
+      "overlay_file": "../assets/prototype_market_discard_overlay.jpg"
+    },
+    {
+      "sample": {
+        "sample_id": "basket",
+        "title": "Basket and occlusion comparison",
+        "author": "George Chernilevsky",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Tomatoes_in_basket_2022_G1.jpg",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "description": "Tomatoes in a basket; appearance and occlusion comparison. No assumption that all hidden surfaces are normal.",
+        "changes": "Original bytes retained; analysis images are resized and overlays/crops added.",
+        "reference_labels": "not independently annotated",
+        "sha256": "dfc43a6aaf20dde90314d8ab34eb1900ded6e97f8219fd583df7b97b2b077bb4"
+      },
+      "observation_id": "c61211f4-69ec-5a5d-9bdc-ea98374bac85",
+      "job": {
+        "job_id": "73c51d45-c102-46bf-9cd6-2ae7adc3a402",
+        "observation_id": "c61211f4-69ec-5a5d-9bdc-ea98374bac85",
+        "status": "failed",
+        "attempt": 1,
+        "created_at": "2026-11-02T18:09:29.092403+00:00",
+        "updated_at": "2026-11-02T18:09:37.474038+00:00",
+        "result": null,
+        "error_code": "too_many_objects_use_smaller_tray"
+      },
+      "reviews": [],
+      "calls": [
+        {
+          "model": "sam-3.1",
+          "prompt_version": "tomato-items-v2",
+          "response_id": "resp_6ae8d1dd5beae20986b74b29",
+          "status": "succeeded",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 4551
+        }
+      ]
+    },
+    {
+      "sample": {
+        "sample_id": "basket_detail",
+        "title": "Basket detail (cropped)",
+        "author": "George Chernilevsky",
+        "source_url": "https://commons.wikimedia.org/wiki/File:Tomatoes_in_basket_2022_G1.jpg",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "description": "A spatial crop of the basket photograph for a smaller, more visible group. Appearance is unchanged; partial and hidden surfaces remain.",
+        "changes": "Cropped original pixels to [900,1250,3000,2600], then JPEG encoded at quality 95; analysis adds resized contextual crops and overlays.",
+        "reference_labels": "not independently annotated",
+        "sha256": "a8235be417f8f8d979137316d1016ce1c35ddd3c1de57a5031e125ac36eeca6a",
+        "parent_sample_id": "basket",
+        "crop_bounds": [
+          900,
+          1250,
+          3000,
+          2600
+        ]
+      },
+      "observation_id": "143be8be-9eb3-50d1-b1a9-58994fea0816",
+      "job": {
+        "job_id": "775a9276-e037-4119-96b5-a744c7559b79",
+        "observation_id": "143be8be-9eb3-50d1-b1a9-58994fea0816",
+        "status": "complete",
+        "attempt": 1,
+        "created_at": "2026-11-02T18:10:53.599619+00:00",
+        "updated_at": "2026-11-02T18:11:25.743691+00:00",
+        "result": {
+          "width": 1280,
+          "height": 823,
+          "prompt_version": "tomato-items-v2",
+          "objects": [
+            {
+              "object_id": "T01",
+              "bounds": [
+                605,
+                187,
+                823,
+                320
+              ],
+              "foreground_pixels": 20321,
+              "mask_file": "mask_000.png",
+              "provider_object_id": "0",
+              "crop_file": "crop_000.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible upper surface appears smooth and glossy red-orange",
+                "No cracks, wrinkles, or fuzzy-like deposits seen on visible area"
+              ],
+              "visibility_limits": [
+                "Lower edge occluded by foreground tomato",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T02",
+              "bounds": [
+                1091,
+                68,
+                1263,
+                198
+              ],
+              "foreground_pixels": 14762,
+              "mask_file": "mask_001.png",
+              "provider_object_id": "1",
+              "crop_file": "crop_001.jpg",
+              "category": "inspect",
+              "observations": [
+                "Small dark specks visible near upper edge of exposed skin",
+                "Remaining visible skin appears smooth orange-red"
+              ],
+              "visibility_limits": [
+                "Partially occluded by basket rim and neighboring tomato",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T03",
+              "bounds": [
+                1059,
+                475,
+                1232,
+                656
+              ],
+              "foreground_pixels": 12787,
+              "mask_file": "mask_002.png",
+              "provider_object_id": "2",
+              "crop_file": "crop_002.jpg",
+              "category": "inspect",
+              "observations": [
+                "Small dark point with lighter halo visible through basket weave",
+                "Surrounding visible skin appears red and smooth"
+              ],
+              "visibility_limits": [
+                "Heavily occluded by wicker strands",
+                "Most of tomato including rear and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T04",
+              "bounds": [
+                1023,
+                166,
+                1280,
+                358
+              ],
+              "foreground_pixels": 31739,
+              "mask_file": "mask_003.png",
+              "provider_object_id": "3",
+              "crop_file": "crop_003.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible surface appears smooth glossy light orange",
+                "No cracks, wrinkles, or fuzzy-like deposits seen on visible area"
+              ],
+              "visibility_limits": [
+                "Lower portion occluded by basket rim",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T05",
+              "bounds": [
+                290,
+                349,
+                458,
+                452
+              ],
+              "foreground_pixels": 9602,
+              "mask_file": "mask_004.png",
+              "provider_object_id": "4",
+              "crop_file": "crop_004.jpg",
+              "category": "unclear",
+              "observations": [
+                "Target area shows mostly dark gap and stem debris with very limited skin visible"
+              ],
+              "visibility_limits": [
+                "Target largely occluded by neighboring fruits and shadow",
+                "Insufficient clear surface to assess"
+              ]
+            },
+            {
+              "object_id": "T06",
+              "bounds": [
+                367,
+                399,
+                527,
+                475
+              ],
+              "foreground_pixels": 7012,
+              "mask_file": "mask_005.png",
+              "provider_object_id": "5",
+              "crop_file": "crop_005.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible strip of skin appears smooth dark red",
+                "No cracks, wrinkles, or fuzzy-like deposits seen on visible portion"
+              ],
+              "visibility_limits": [
+                "Lower edge occluded by basket",
+                "Most of tomato including rear and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T07",
+              "bounds": [
+                502,
+                338,
+                546,
+                441
+              ],
+              "foreground_pixels": 2287,
+              "mask_file": "mask_006.png",
+              "provider_object_id": "6",
+              "crop_file": "crop_006.jpg",
+              "category": "unclear",
+              "observations": [
+                "Only a narrow vertical sliver of red surface is visible"
+              ],
+              "visibility_limits": [
+                "Target almost entirely occluded by adjacent tomatoes",
+                "Insufficient area to assess surface condition"
+              ]
+            },
+            {
+              "object_id": "T08",
+              "bounds": [
+                892,
+                43,
+                1095,
+                197
+              ],
+              "foreground_pixels": 11664,
+              "mask_file": "mask_007.png",
+              "provider_object_id": "7",
+              "crop_file": "crop_007.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible upper surface appears smooth pink-red with calyx",
+                "No cracks, wrinkles, or fuzzy-like deposits seen on visible area"
+              ],
+              "visibility_limits": [
+                "Lower portion occluded by foreground tomato",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T09",
+              "bounds": [
+                315,
+                176,
+                393,
+                350
+              ],
+              "foreground_pixels": 3751,
+              "mask_file": "mask_008.png",
+              "provider_object_id": "8",
+              "crop_file": "crop_008.jpg",
+              "category": "unclear",
+              "observations": [
+                "Crop shows mostly edges of adjacent fruits and shadowed gap"
+              ],
+              "visibility_limits": [
+                "Target boundaries ambiguous and largely occluded",
+                "No sufficient clear surface visible for assessment"
+              ]
+            },
+            {
+              "object_id": "T10",
+              "bounds": [
+                100,
+                131,
+                354,
+                386
+              ],
+              "foreground_pixels": 36205,
+              "mask_file": "mask_009.png",
+              "provider_object_id": "9",
+              "crop_file": "crop_009.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible surface appears smooth glossy brown-red",
+                "No cracks, wrinkles, or fuzzy-like deposits seen on visible area"
+              ],
+              "visibility_limits": [
+                "Partially occluded by green leaf in foreground",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T11",
+              "bounds": [
+                813,
+                306,
+                1019,
+                464
+              ],
+              "foreground_pixels": 19905,
+              "mask_file": "mask_010.png",
+              "provider_object_id": "10",
+              "crop_file": "crop_010.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible surface appears smooth with green to orange shading",
+                "No cracks, wrinkles, or fuzzy-like deposits seen, shadow present"
+              ],
+              "visibility_limits": [
+                "Partially occluded by neighboring tomatoes and basket",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T12",
+              "bounds": [
+                741,
+                157,
+                860,
+                250
+              ],
+              "foreground_pixels": 4897,
+              "mask_file": "mask_011.png",
+              "provider_object_id": "11",
+              "crop_file": "crop_011.jpg",
+              "category": "unclear",
+              "observations": [
+                "Crop shows stem and edges of fruits with very limited target skin"
+              ],
+              "visibility_limits": [
+                "Target largely occluded and out of clear view",
+                "Insufficient surface visible for assessment"
+              ]
+            },
+            {
+              "object_id": "T13",
+              "bounds": [
+                358,
+                133,
+                607,
+                384
+              ],
+              "foreground_pixels": 46697,
+              "mask_file": "mask_012.png",
+              "provider_object_id": "12",
+              "crop_file": "crop_012.jpg",
+              "category": "inspect",
+              "observations": [
+                "Several small dark specks visible on central red surface",
+                "Small pale flaky area visible near lower edge"
+              ],
+              "visibility_limits": [
+                "Lower portion partially occluded by foreground tomato",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T14",
+              "bounds": [
+                214,
+                383,
+                334,
+                446
+              ],
+              "foreground_pixels": 3202,
+              "mask_file": "mask_013.png",
+              "provider_object_id": "13",
+              "crop_file": "crop_013.jpg",
+              "category": "unclear",
+              "observations": [
+                "Only a thin sliver of dark red skin visible through basket"
+              ],
+              "visibility_limits": [
+                "Heavily occluded by wicker",
+                "Insufficient area to assess surface condition"
+              ]
+            },
+            {
+              "object_id": "T15",
+              "bounds": [
+                1141,
+                803,
+                1268,
+                823
+              ],
+              "foreground_pixels": 1845,
+              "mask_file": "mask_014.png",
+              "provider_object_id": "14",
+              "crop_file": "crop_014.jpg",
+              "category": "unclear",
+              "observations": [
+                "Only a thin pale edge visible at bottom of frame"
+              ],
+              "visibility_limits": [
+                "Target almost entirely outside view and occluded",
+                "No sufficient tomato surface visible"
+              ]
+            },
+            {
+              "object_id": "T16",
+              "bounds": [
+                811,
+                90,
+                1075,
+                330
+              ],
+              "foreground_pixels": 42384,
+              "mask_file": "mask_015.png",
+              "provider_object_id": "15",
+              "crop_file": "crop_015.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible surface appears smooth glossy orange-red with highlight",
+                "No cracks, wrinkles, or fuzzy-like deposits seen on visible area"
+              ],
+              "visibility_limits": [
+                "Lower edge occluded by foreground tomato",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T17",
+              "bounds": [
+                614,
+                355,
+                862,
+                598
+              ],
+              "foreground_pixels": 27300,
+              "mask_file": "mask_016.png",
+              "provider_object_id": "16",
+              "crop_file": "crop_016.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible upper surface appears smooth glossy bright red",
+                "No cracks, wrinkles, or fuzzy-like deposits seen on visible area"
+              ],
+              "visibility_limits": [
+                "Lower portion occluded by basket rim",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T18",
+              "bounds": [
+                534,
+                298,
+                794,
+                463
+              ],
+              "foreground_pixels": 22904,
+              "mask_file": "mask_017.png",
+              "provider_object_id": "17",
+              "crop_file": "crop_017.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible surface appears smooth light red-orange around stem scar",
+                "No cracks, wrinkles, or fuzzy-like deposits seen on visible area"
+              ],
+              "visibility_limits": [
+                "Lower portion occluded by foreground tomato",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T19",
+              "bounds": [
+                445,
+                441,
+                615,
+                585
+              ],
+              "foreground_pixels": 8615,
+              "mask_file": "mask_018.png",
+              "provider_object_id": "18",
+              "crop_file": "crop_018.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible red skin above and below basket appears smooth",
+                "No cracks, wrinkles, or fuzzy-like deposits seen on visible portions"
+              ],
+              "visibility_limits": [
+                "Middle band heavily occluded by wicker and leaves",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T20",
+              "bounds": [
+                814,
+                481,
+                1034,
+                681
+              ],
+              "foreground_pixels": 15472,
+              "mask_file": "mask_019.png",
+              "provider_object_id": "19",
+              "crop_file": "crop_019.jpg",
+              "category": "no_visible_concern",
+              "observations": [
+                "Visible orange skin seen through weave appears smooth",
+                "No cracks, wrinkles, or fuzzy-like deposits seen on visible portions"
+              ],
+              "visibility_limits": [
+                "Heavily occluded by wicker strands",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T21",
+              "bounds": [
+                507,
+                17,
+                746,
+                225
+              ],
+              "foreground_pixels": 29653,
+              "mask_file": "mask_020.png",
+              "provider_object_id": "20",
+              "crop_file": "crop_020.jpg",
+              "category": "inspect",
+              "observations": [
+                "Grayish elongated surface mark visible on upper pink-red skin",
+                "Remaining visible skin appears smooth glossy"
+              ],
+              "visibility_limits": [
+                "Lower portion occluded by neighboring tomato",
+                "Rear, sides and underside not visible"
+              ]
+            },
+            {
+              "object_id": "T22",
+              "bounds": [
+                777,
+                314,
+                845,
+                367
+              ],
+              "foreground_pixels": 2021,
+              "mask_file": "mask_021.png",
+              "provider_object_id": "21",
+              "crop_file": "crop_021.jpg",
+              "category": "unclear",
+              "observations": [
+                "Only small dark blurred gap between fruits is visible"
+              ],
+              "visibility_limits": [
+                "Target largely occluded by adjacent tomatoes",
+                "Insufficient clear surface for assessment"
+              ]
+            },
+            {
+              "object_id": "T23",
+              "bounds": [
+                675,
+                589,
+                763,
+                689
+              ],
+              "foreground_pixels": 6307,
+              "mask_file": "mask_022.png",
+              "provider_object_id": "22",
+              "crop_file": "crop_022.jpg",
+              "category": "unclear",
+              "observations": [
+                "Visible area is small dark reddish patch with limited detail"
+              ],
+              "visibility_limits": [
+                "Heavily occluded by basket and shadow",
+                "Resolution and lighting limit surface assessment"
+              ]
+            },
+            {
+              "object_id": "T24",
+              "bounds": [
+                981,
+                337,
+                1165,
+                520
+              ],
+              "foreground_pixels": 11274,
+              "mask_file": "mask_023.png",
+              "provider_object_id": "23",
+              "crop_file": "crop_023.jpg",
+              "category": "inspect",
+              "observations": [
+                "Small dark spot visible on left side of orange skin",
+                "Remaining visible skin appears smooth"
+              ],
+              "visibility_limits": [
+                "Partially occluded by wicker strands",
+                "Rear, sides and underside not visible"
+              ]
+            }
+          ],
+          "scene_limits": [
+            "Many tomatoes overlap so sides and undersides are hidden",
+            "Wicker basket occludes lower and side surfaces",
+            "Strong sunlight, shadows and specular highlights limit surface detail",
+            "Foreground foliage occludes left-side views",
+            "Distance and resolution limit detection of fine surface features"
+          ],
+          "mode": "live_meta",
+          "sensor": null
+        },
+        "error_code": null
+      },
+      "reviews": [],
+      "calls": [
+        {
+          "model": "sam-3.1",
+          "prompt_version": "tomato-items-v2",
+          "response_id": "resp_6ae8d22f467ba3151dcc4d16",
+          "status": "succeeded",
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "latency_ms": 2601
+        },
+        {
+          "model": "muse-spark-1.3",
+          "prompt_version": "tomato-items-v2",
+          "response_id": "resp_6ae8d24b311c5ebd24354256",
+          "status": "succeeded",
+          "input_tokens": 3965,
+          "output_tokens": 3956,
+          "latency_ms": 17338
+        }
+      ],
+      "overlay_download_bytes": 457920,
+      "category_counts": {
+        "inspect": 5,
+        "no_visible_concern": 11,
+        "unclear": 8
+      },
+      "overlay_file": "../assets/prototype_basket_detail_overlay.jpg"
+    }
+  ],
+  "limitations": [
+    "Exploratory development images, not a held-out accuracy benchmark",
+    "Counts are model regions/categories, not independently verified tomato counts",
+    "Full basket failed at the 32-region bound; detail crop is a separate derived input",
+    "One UI-test review is not a human ground-truth label",
+    "No physical sensor sessions or stock actions were performed"
+  ]
+}

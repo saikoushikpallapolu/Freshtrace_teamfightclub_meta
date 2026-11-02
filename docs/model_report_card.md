@@ -1,5 +1,10 @@
 # Model report card
 
+Update: a later real multi-item prototype run is documented in the
+[visual prototype report](visual_prototype.md). It includes three completed inputs
+and a full-scene capacity stop. Accuracy still lacks independent labels; the
+single-tomato assessment below remains the earlier 1 November baseline.
+
 Based on the recorded 1 November 2026 run. This is an integration assessment,
 not a validated food-quality benchmark. Evidence: [recorded results](validation/video_model_run.json).
 

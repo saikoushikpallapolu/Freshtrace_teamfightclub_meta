@@ -1,5 +1,10 @@
 # Product development: first working slice
 
+Update: the [visual prototype](visual_prototype.md) now adds durable SAM/Spark jobs,
+item evidence, exact-mask picking, public samples and separate reviews. The account
+below documents the earlier storage milestone; its statements about pending model
+jobs are historical. Use the visual-prototype guide for current startup commands.
+
 Updated: 2 November 2026. Branch: `codex/meta-model-validation`.
 
 ## Working behavior

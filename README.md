@@ -6,6 +6,8 @@ The product name is undecided.
 
 ## Project documents
 
+- [Visual inspection prototype](docs/visual_prototype.md): live SAM/Spark item inspection,
+  public test images, saved reviews, measured run evidence and local setup.
 - [Run the product development build](docs/product_development.md): batch registration,
   photo capture, saved history, migrations and local verification.
 - [Phased implementation plan](docs/phased_implementation_plan.md): current build
@@ -32,5 +34,6 @@ Python inference worker and ESP32-S3 sensor firmware. Most new product folders a
 documented scaffolding. A new batch workspace now saves batches, photos and capture
 history through migrated database tables and local media storage. The Meta adapters
 provide live-tested perception and read-only planning boundaries; application model
-jobs, sensor sessions and the complete decision workflow are not yet wired in.
+jobs now persist SAM masks, contextual Spark observations and separate reviews.
+Sensor sessions, Wonder planning and the complete decision workflow remain planned.
 Existing runtime entry points and deployment scripts remain in place.

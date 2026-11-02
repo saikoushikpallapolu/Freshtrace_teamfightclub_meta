@@ -2,6 +2,15 @@
 
 ## Implementation update — 2 November 2026
 
+The later visual milestone adds `contracts/inspection.py`, `meta/inspection.py`,
+`workflows/perception.py`, analysis/review/sample routers, migration
+`0003_perception_jobs.py`, `InspectionPanel.jsx`, `SamplePicker.jsx`, a hidden-key
+local launcher and a live-validation CLI. Public photos and provenance live under
+`data/fixtures/tomato_images/`; recorded outputs/overlays are in docs. Durable jobs,
+SAM/Spark item observations and human review storage are implemented exceptions to
+the historical planning tree. See [visual prototype](visual_prototype.md). Sensor
+execution, policy, stock actions and Wonder tasks remain planned.
+
 Phase 1 now adds `contracts/batch.py`, `persistence/product_models.py`, transactional
 `repositories.py`, database runtime/migration helpers, two ordered Alembic revisions,
 `storage/media.py`, batch/evidence endpoints and a standalone `api/product.py`

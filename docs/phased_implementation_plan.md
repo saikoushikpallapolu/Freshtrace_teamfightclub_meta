@@ -2,9 +2,11 @@
 
 Prepared: 2 November 2026. Product name: undecided.
 
-Implementation update: Phase 1 and Phase 2's registration/capture/history slice are
-now implemented on `codex/meta-model-validation`. Inference-job orchestration is
-still pending with Phase 3. See [development guide](product_development.md).
+Implementation status: Phase 1, Phase 2's capture/history slice and Phase 3's durable
+jobs, real item-level SAM/Spark pipeline, overlays, public samples and review storage
+are now implemented on `codex/meta-model-validation` and live-tested. See
+[visual prototype](visual_prototype.md). Independent accuracy evaluation is still
+pending. Phase 4 sensor characterization/session integration is the next build gate.
 
 ## Outcome and starting point
 
@@ -203,6 +205,6 @@ Run checks appropriate to each slice and update architecture labels from planned
 to implemented only after its gate passes. Push/merge when authorized; keep keys,
 private captures, local databases and raw caches out of Git.
 
-**Start next:** Phase 3's durable perception jobs and saved SAM/Spark results. Test
-job transitions with fixtures, then select mixed-tomato images for real item-level
-evaluation. Do not add training/RAG before a measurable baseline exists.
+**Start next:** Phase 4 sensor-session contracts and hardware characterization,
+alongside independent item labels for Phase 3 evaluation. Do not add training/RAG
+before a measurable baseline exists.
