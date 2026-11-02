@@ -3,6 +3,11 @@ const base = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
 export const mediaUrl = (batchId, mediaId) =>
   `${base}/api/batches/${batchId}/media/${mediaId}/content`
 
+export const artifactUrl = (batchId, observationId, filename) =>
+  `${base}/api/batches/${batchId}/observations/${observationId}/artifacts/${filename}`
+
+export const sampleImageUrl = (sampleId) => `${base}/api/samples/${sampleId}/image`
+
 export async function request(path, options = {}) {
   const response = await fetch(`${base}/api${path}`, options)
   if (!response.ok) {
