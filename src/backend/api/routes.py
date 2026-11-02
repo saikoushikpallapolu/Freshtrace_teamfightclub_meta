@@ -8,7 +8,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from backend.persistence.db import SessionLocal, get_db, init_db
+from backend.persistence.db import SessionLocal, get_db, init_db, engine
 from backend.persistence.models import SessionModel, RawTelemetryModel, EventModel, StateSnapshotModel
 from backend.inference_service import InferenceEngineService
 
@@ -317,8 +317,12 @@ async def stream_device_updates(device_id: str):
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 # Mount frontend build if present
-from fastapi.staticfiles import StaticFiles
+from backend.api.product import configure_product
 import os
+
+configure_product(app, engine, os.getenv("PRODUCT_MEDIA_ROOT", "data/media/uploads"))
+
+from fastapi.staticfiles import StaticFiles
 
 candidates = [
     os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), "frontend", "dist"),
