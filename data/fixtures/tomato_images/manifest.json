@@ -1,0 +1,65 @@
+[
+  {
+    "sample_id": "mixed_mold",
+    "title": "Mixed visible condition",
+    "filename": "mixed_mold.jpg",
+    "author": "JIP",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Moldy_tomatoes.jpg",
+    "download_url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Moldy_tomatoes.jpg",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "description": "Real packed tomatoes with mold visible on some items. Occlusion and partial objects make this a challenging example.",
+    "changes": "Original bytes retained; prototype produces resized analysis images, contextual crops and overlays under the same image license.",
+    "reference_labels": "not independently annotated",
+    "sha256": "db3824f1a93653a01eea1809105ead7183b5e8535ac2967f8443c4bc2bdf34e0"
+  },
+  {
+    "sample_id": "market_discard",
+    "title": "Visible damage comparison",
+    "filename": "market_discard.jpg",
+    "author": "Gideon",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Rotten_tomatoes.jpg",
+    "download_url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Rotten_tomatoes.jpg",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "description": "Two damaged tomatoes after a market. Tests obvious appearance concerns, not a balanced fresh/rotten benchmark.",
+    "changes": "Original bytes retained; prototype produces resized analysis images, contextual crops and overlays under the same image license.",
+    "reference_labels": "not independently annotated",
+    "sha256": "e9b528276fe755fb2ac0c1af7527614687b2d7ca8a90427cbf151c29d6c6a7be"
+  },
+  {
+    "sample_id": "basket",
+    "title": "Basket and occlusion comparison",
+    "filename": "basket.jpg",
+    "author": "George Chernilevsky",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Tomatoes_in_basket_2022_G1.jpg",
+    "download_url": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Tomatoes_in_basket_2022_G1.jpg",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "description": "Tomatoes in a basket; appearance and occlusion comparison. No assumption that all hidden surfaces are normal.",
+    "changes": "Original bytes retained; analysis images are resized and overlays/crops added.",
+    "reference_labels": "not independently annotated",
+    "sha256": "dfc43a6aaf20dde90314d8ab34eb1900ded6e97f8219fd583df7b97b2b077bb4"
+  },
+  {
+    "sample_id": "basket_detail",
+    "title": "Basket detail (cropped)",
+    "filename": "basket_detail.jpg",
+    "author": "George Chernilevsky",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Tomatoes_in_basket_2022_G1.jpg",
+    "download_url": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Tomatoes_in_basket_2022_G1.jpg",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "description": "A spatial crop of the basket photograph for a smaller, more visible group. Appearance is unchanged; partial and hidden surfaces remain.",
+    "changes": "Cropped original pixels to [900,1250,3000,2600], then JPEG encoded at quality 95; analysis adds resized contextual crops and overlays.",
+    "reference_labels": "not independently annotated",
+    "sha256": "a8235be417f8f8d979137316d1016ce1c35ddd3c1de57a5031e125ac36eeca6a",
+    "parent_sample_id": "basket",
+    "crop_bounds": [
+      900,
+      1250,
+      3000,
+      2600
+    ]
+  }
+]
