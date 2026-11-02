@@ -6,6 +6,10 @@ The product name is undecided.
 
 ## Project documents
 
+- [Run the product development build](docs/product_development.md): batch registration,
+  photo capture, saved history, migrations and local verification.
+- [Phased implementation plan](docs/phased_implementation_plan.md): current build
+  order, concrete deliverables, completion gates and the next implementation task.
 - [Product and build plan](docs/product_build_plan.pdf): unified product flow,
   model roles, scoring, implementation milestones and evaluation.
 - [Repository architecture](docs/repository_architecture.md): current runtime,
@@ -25,6 +29,8 @@ The product name is undecided.
 
 The existing application is a React/Vite dashboard, FastAPI telemetry API,
 Python inference worker and ESP32-S3 sensor firmware. Most new product folders are
-documented scaffolding. The Meta adapters now provide live-tested perception and
-read-only planning boundaries; the complete product workflow is not yet wired in.
+documented scaffolding. A new batch workspace now saves batches, photos and capture
+history through migrated database tables and local media storage. The Meta adapters
+provide live-tested perception and read-only planning boundaries; application model
+jobs, sensor sessions and the complete decision workflow are not yet wired in.
 Existing runtime entry points and deployment scripts remain in place.

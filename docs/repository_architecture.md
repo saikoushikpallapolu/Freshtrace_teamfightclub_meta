@@ -1,5 +1,21 @@
 # Repository architecture and implementation map
 
+## Implementation update — 2 November 2026
+
+Phase 1 now adds `contracts/batch.py`, `persistence/product_models.py`, transactional
+`repositories.py`, database runtime/migration helpers, two ordered Alembic revisions,
+`storage/media.py`, batch/evidence endpoints and a standalone `api/product.py`
+factory. The combined API registers the same routes before its static mount.
+The capture slice of Phase 2 adds `frontend/src/pages/BatchWorkspace.jsx`/CSS and
+`api/client.js`, preserves the device dashboard via `?view=device`, and uses a Vite
+API proxy. Database/model consistency and restart-safe captures are tested.
+See [development guide](product_development.md) for exact commands and limitations.
+
+The historical tree below remains a planning baseline: those named files are now
+implemented exceptions. Inference jobs, per-item model observations, sensor-session
+execution, policy, tasks and outcomes remain planned. Existing device-dashboard
+heuristics have not been validated or replaced by this milestone.
+
 Reviewed: 31 October 2026. Product name: undecided.
 
 ## Checked-in demonstration media
