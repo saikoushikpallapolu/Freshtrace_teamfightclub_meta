@@ -1,6 +1,7 @@
 """Additive product tables; legacy telemetry models remain untouched."""
 
 from sqlalchemy import (
+    JSON,
     CheckConstraint,
     Column,
     Float,
@@ -57,6 +58,7 @@ class ObservationModel(Base):
     captured_at = Column(String(40), nullable=False)
     created_at = Column(String(40), nullable=False)
     source = Column(String(20), nullable=False)
+    sample_id = Column(String(60))
     status = Column(String(20), nullable=False)
     __table_args__ = (
         ForeignKeyConstraint(
@@ -102,3 +104,33 @@ class RequestReceiptModel(Base):
     request_key = Column(String(100), primary_key=True)
     fingerprint = Column(String(64), nullable=False)
     resource_id = Column(String(36), nullable=False)
+
+
+class PerceptionJobModel(Base):
+    __tablename__ = "product_perception_jobs"
+    job_id = Column(String(36), primary_key=True)
+    observation_id = Column(
+        String(36), ForeignKey("product_observations.observation_id"), nullable=False, unique=True
+    )
+    status = Column(String(20), nullable=False)
+    attempt = Column(Integer, nullable=False, default=1)
+    created_at = Column(String(40), nullable=False)
+    updated_at = Column(String(40), nullable=False)
+    lease_until = Column(String(40))
+    result = Column(JSON)
+    error_code = Column(String(60))
+    __table_args__ = (
+        CheckConstraint("status IN ('queued','running','complete','failed')", name="ck_job_status"),
+    )
+
+
+class ItemReviewModel(Base):
+    __tablename__ = "product_item_reviews"
+    review_id = Column(String(36), primary_key=True)
+    job_id = Column(
+        String(36), ForeignKey("product_perception_jobs.job_id"), nullable=False, index=True
+    )
+    object_id = Column(String(30), nullable=False)
+    category = Column(String(30), nullable=False)
+    note = Column(String(500), nullable=False)
+    created_at = Column(String(40), nullable=False)

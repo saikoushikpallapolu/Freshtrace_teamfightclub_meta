@@ -57,6 +57,7 @@ class ObservationRead(ObservationCreate):
     batch_id: UUID
     status: ObservationStatus
     created_at: datetime
+    sample_id: str | None = None
 
 
 class MediaRead(Contract):
