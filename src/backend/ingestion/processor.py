@@ -1,15 +1,18 @@
 import json
-import os
-from datetime import datetime
+import re
+from datetime import datetime, timezone
 from pathlib import Path
+from uuid import uuid4
+
 from backend.contracts.telemetry import RawTelemetry
+
 
 class IngestionProcessor:
     def __init__(self, raw_storage_dir: str = "data/raw"):
         self.raw_storage_dir = Path(raw_storage_dir)
         self.raw_storage_dir.mkdir(parents=True, exist_ok=True)
-        self.sequence_trackers = {} # device_id -> expected sequence
-        self.active_sessions = {}   # device_id -> session_id
+        self.sequence_trackers = {}  # device_id -> expected sequence
+        self.active_sessions = {}  # device_id -> session_id
 
     def validate_payload(self, payload: dict) -> RawTelemetry:
         """Validates ranges and types, returning a structured contract."""
@@ -26,7 +29,7 @@ class IngestionProcessor:
                 voc_index=int(payload.get("voc_index", 0)),
                 nox_index=int(payload.get("nox_index", 0)),
                 wifi_rssi=int(payload.get("wifi_rssi", 0)),
-                sequence_number=payload.get("sequence_number")
+                sequence_number=payload.get("sequence_number"),
             )
 
             # 2. Range validation
@@ -36,12 +39,17 @@ class IngestionProcessor:
                 raise ValueError(f"Humidity {telemetry.humidity_pct} out of bounds")
             if telemetry.voc_raw < 0 or telemetry.nox_raw < 0:
                 raise ValueError("VOC/NOx raw values cannot be negative")
+            for value in (telemetry.device_id, telemetry.food_type):
+                if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,119}", value):
+                    raise ValueError(
+                        "Device and food identifiers must use letters, numbers, _ or -"
+                    )
 
             return telemetry
         except (KeyError, ValueError, TypeError) as e:
             raise ValueError(f"Validation failed: {str(e)}")
 
-    def process(self, payload: dict):
+    def process(self, payload: dict, *, received_at: str | None = None):
         """Main ingestion pipeline."""
         try:
             telemetry = self.validate_payload(payload)
@@ -50,12 +58,12 @@ class IngestionProcessor:
             return None
 
         device = telemetry.device_id
-        
+
         # Session assignment (Simplification: 1 session per device for now)
         if device not in self.active_sessions:
-            self.active_sessions[device] = f"session_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+            self.active_sessions[device] = f"session_{uuid4().hex}"
         telemetry.session_id = self.active_sessions[device]
-        telemetry.received_at = datetime.utcnow().isoformat() + "Z"
+        telemetry.received_at = received_at or datetime.now(timezone.utc).isoformat()
 
         # Gap and duplicate detection
         seq = telemetry.sequence_number
@@ -64,8 +72,10 @@ class IngestionProcessor:
             if expected_seq is not None:
                 if seq == expected_seq - 1:
                     print(f"[WARN] Duplicate sequence {seq} detected for {device}")
+                    return None
                 elif seq < expected_seq - 1:
                     print(f"[WARN] Out-of-order sequence {seq} detected for {device}")
+                    return None
                 elif seq > expected_seq:
                     print(f"[WARN] GAP DETECTED: expected {expected_seq}, got {seq}")
             self.sequence_trackers[device] = seq + 1
@@ -77,7 +87,7 @@ class IngestionProcessor:
     def _store_raw(self, telemetry: RawTelemetry):
         device_dir = self.raw_storage_dir / telemetry.device_id
         device_dir.mkdir(parents=True, exist_ok=True)
-        
+
         file_path = device_dir / f"{telemetry.session_id}.jsonl"
         with open(file_path, "a") as f:
             # Convert dataclass to dict and write out

@@ -1,5 +1,5 @@
 # Media and artifact storage
 
-Planned files: media.py and artifacts.py. Store oriented original photos, hashes, parsed masks and raw-log references through a local/cloud boundary. Keep private objects out of Git and return access-controlled references.
+`media.py` validates still JPEG/PNG uploads, bounds size/pixels, preserves original bytes by content hash, and creates normalized oriented JPEGs. Immutable file publication is atomic. The perception worker writes per-attempt masks, crops, overlays and hit maps under the configured media root; API retrieval is batch-scoped.
 
-See [repository architecture](../../../docs/repository_architecture.md) for the complete layout and implementation boundaries.
+Back up the media root and database together. Local uploads and model artifacts are excluded from Git. See [setup](../../../docs/setup.md).

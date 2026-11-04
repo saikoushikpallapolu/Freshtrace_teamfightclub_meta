@@ -1,6 +1,8 @@
 from datetime import datetime
-from backend.contracts.baseline import BaselineStatistics
+
 from pydantic import BaseModel, ConfigDict
+
+from backend.contracts.baseline import BaselineStatistics
 
 
 class Session(BaseModel):

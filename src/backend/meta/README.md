@@ -1,20 +1,11 @@
-# Hosted Meta adapters
+# Hosted Meta integrations
 
-Implemented and live-tested on 1 November 2026:
+- `client.py`: explicit server-only credentials, Meta endpoint/model identifiers, normalized image inputs and bounded request timeouts.
+- `segmentation.py`: strict SAM result parsing and decoded masks/overlays.
+- `inspection.py`: SAM followed by contextual Spark item inspection, aligned crops and exact-mask hit maps.
+- `vision.py`: structured scene-level visual observations.
+- `planner.py`: bounded, read-only Wonder history-tool loop.
 
-- `client.py`: server-only Meta client and orientation-normalized image input.
-- `segmentation.py`: strict SAM parsing, decoded per-object masks and overlays.
-- `vision.py`: Spark observations validated against a strict Pydantic JSON schema.
-- `planner.py`: bounded Wonder history-tool round trip; one read-only tool only.
+These adapters do not make requests on import. The product worker calls the photo inspection pipeline only for queued jobs. Voice and four-model video checks are explicit scripts under `scripts/smoke/`; saved results are presented in the local model lab.
 
-No AWS or inference starts on import. The caller supplies credentials and history.
-Product API endpoints, sensor orchestration, persistent task state and optional
-transcription remain future work. The test fixture is explicitly synthetic; it is
-not a real vendor database or a real device operation.
-
-Use Python 3.12 for the validated environment. Install with
-`python -m pip install -r scripts/smoke/requirements.txt` or the package's `models`
-extra. See [validation report](../../../docs/model_validation.md) for results and
-known limitations. No model weights need to be downloaded for these hosted APIs.
-
-See [repository architecture](../../../docs/repository_architecture.md) for the complete layout and implementation boundaries.
+Install `python -m pip install -e ".[models]"`. See [setup](../../../docs/setup.md), [model validation](../../../docs/model_validation.md), and [architecture](../../../docs/repository_architecture.md).

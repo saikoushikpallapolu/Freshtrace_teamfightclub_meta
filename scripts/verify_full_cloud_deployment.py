@@ -1,15 +1,14 @@
+import json
 import os
 import sys
 import time
-import json
-import requests
+
 import boto3
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
-ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
-SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 REGION = os.getenv("AWS_REGION", "ap-south-1")
 ENDPOINT = os.getenv("AWS_IOT_ENDPOINT")
 TOPIC = os.getenv("AWS_IOT_TOPIC", "telemetry/device/Device-01/telemetry")
@@ -44,7 +43,9 @@ print("\n[Test 2/4] Verifying Cloud Frontend on S3 Static Website...")
 try:
     r = requests.get(s3_website_url, timeout=5)
     assert r.status_code == 200, f"Expected 200, got {r.status_code}"
-    assert "<title>project</title>" in r.text or "assets/" in r.text, "HTML missing expected content"
+    assert "<title>project</title>" in r.text or "assets/" in r.text, (
+        "HTML missing expected content"
+    )
     print(f"  [PASS] Frontend accessible at {s3_website_url} (HTTP 200)")
 except Exception as e:
     print(f"  [FAIL] Frontend check failed: {e}")
@@ -54,10 +55,8 @@ except Exception as e:
 print("\n[Test 3/4] Publishing Live Sensor Telemetry to AWS IoT Core...")
 iot_client = boto3.client(
     "iot-data",
-    aws_access_key_id=ACCESS_KEY,
-    aws_secret_access_key=SECRET_KEY,
     region_name=REGION,
-    endpoint_url=f"https://{ENDPOINT}"
+    endpoint_url=f"https://{ENDPOINT}",
 )
 
 test_timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -72,7 +71,7 @@ test_payload = {
     "nox_raw": 20100,
     "voc_index": 120,
     "nox_index": 1,
-    "wifi_rssi": -42
+    "wifi_rssi": -42,
 }
 
 try:
@@ -93,7 +92,7 @@ for attempt in range(1, 15):
         r = requests.get(f"{api_base}/devices/Device-01/status", timeout=5)
         if r.status_code == 200:
             data = r.json()
-            sensor_data = data.get("sensor", {})
+            sensor_data = data.get("sensor") or {}
             # Check if updated metrics or recent timestamp reflected
             if sensor_data.get("voc_raw") == 32800 or sensor_data.get("temperature_c") == 28.5:
                 print(f"  [PASS] Live Status Verified on Cloud API! (Attempt {attempt}):")
@@ -101,7 +100,9 @@ for attempt in range(1, 15):
                 print(f"         Food:        {data.get('food_type')}")
                 print(f"         Risk Score:  {data.get('spoilage_risk')}")
                 print(f"         Dominant:    {data.get('dominant_risk')}")
-                print(f"         RUL Hours:   {data.get('remaining_useful_life', {}).get('hours')} hrs")
+                print(
+                    f"         RUL Hours:   {data.get('remaining_useful_life', {}).get('hours')} hrs"
+                )
                 print(f"         Sensors:     {sensor_data}")
                 print(f"         Last Update: {data.get('last_updated')}")
                 verified = True
@@ -113,6 +114,7 @@ if not verified:
     # Fetch current status even if specific packet took an extra second
     r = requests.get(f"{api_base}/devices/Device-01/status", timeout=5)
     print(f"  [STATUS] Latest DB record on API: {r.status_code} -> {r.json()}")
+    raise SystemExit("Cloud verification failed: the published telemetry was not observed.")
 
 print("\n" + "=" * 70)
 print("ALL AWS CLOUD SERVICES VERIFIED AND HEALTHY!")

@@ -1,5 +1,12 @@
 # Database migrations
 
-Reserve ordered schema evolution for batches, observations, media, investigations, tasks, decisions, outcomes and model calls. Select a migration runner when implementing persistence. Existing create_all is not a migration system. No schema was changed by adding this folder.
+Ordered Alembic upgrades run through `persistence/migrate.py` using an explicit database connection:
 
-See [repository architecture](../../../../docs/repository_architecture.md) for the complete layout and implementation boundaries.
+| Revision | Purpose |
+| --- | --- |
+| `0001_product_foundation` | Batches, media, observations, sensor-link schema and model-call receipts |
+| `0002_request_receipts` | Durable mutation retry receipts |
+| `0003_perception_jobs` | Analysis jobs, sample IDs and human reviews |
+| `0004_sensor_snapshot` | Complete persisted sensor inference results |
+
+The initializer preserves legacy sensor tables and applies forward upgrades. Back up the database and media together and use one migration owner at startup. Destructive downgrades are not part of the application flow. See [architecture](../../../../docs/repository_architecture.md).

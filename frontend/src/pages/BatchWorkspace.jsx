@@ -62,7 +62,7 @@ export default function BatchWorkspace() {
     event.preventDefault()
     const form = new FormData(event.currentTarget)
     const payload = { label: form.get('label'), produce_type: 'tomato',
-      quantity: Number(form.get('quantity')), quantity_unit: form.get('unit') }
+              quantity: Number(form.get('quantity')), quantity_unit: form.get('unit') }
     const fingerprint = JSON.stringify(payload)
     if (batchAttempt.current?.fingerprint !== fingerprint)
       batchAttempt.current = { fingerprint, key: crypto.randomUUID() }

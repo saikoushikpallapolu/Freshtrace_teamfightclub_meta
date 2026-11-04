@@ -1,5 +1,3 @@
-# End-to-end verification
+# Browser journeys
 
-Future register -> capture -> valid measurement -> decision -> human outcome -> next-visit scenarios. Include failures and unresolved results. Do not run provisioning scripts as product tests.
-
-See [repository architecture](../../docs/repository_architecture.md) for the complete layout and implementation boundaries.
+The current automated suite covers API/storage and processing boundaries under `integration/` and `unit/`. Use the [setup guide](../../docs/setup.md) to walk through registration, photo capture, analysis, item selection, review persistence, and device status in the browser. Keep live provider/hardware checks separate from offline tests and provisioning scripts.

@@ -1,28 +1,33 @@
-import os
 import json
+import os
 import time
+
 import boto3
 from dotenv import load_dotenv
 
 load_dotenv()
 
-ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
-SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 REGION = os.getenv("AWS_REGION", "ap-south-1")
 QUEUE_URL = os.getenv("AWS_SQS_QUEUE_URL")
-INSTANCE_ID = "i-01c71ae75b0f02743"
+INSTANCE_ID = os.getenv("AWS_EC2_INSTANCE_ID")
+if not INSTANCE_ID:
+    raise SystemExit("Set AWS_EC2_INSTANCE_ID before running cloud diagnostics.")
 
 print("=" * 60)
 print("Diagnosing AWS IoT -> SQS -> EC2 -> Database -> Frontend Pipeline")
 print("=" * 60)
 
 # 1. Check SQS Queue attributes and message count
-sqs = boto3.client("sqs", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
+sqs = boto3.client("sqs", region_name=REGION)
 if QUEUE_URL:
     try:
         attrs = sqs.get_queue_attributes(
             QueueUrl=QUEUE_URL,
-            AttributeNames=["ApproximateNumberOfMessages", "ApproximateNumberOfMessagesNotVisible", "ApproximateNumberOfMessagesDelayed"]
+            AttributeNames=[
+                "ApproximateNumberOfMessages",
+                "ApproximateNumberOfMessagesNotVisible",
+                "ApproximateNumberOfMessagesDelayed",
+            ],
         )
         print(f"\n[SQS Queue Status] {QUEUE_URL}")
         for k, v in attrs.get("Attributes", {}).items():
@@ -31,7 +36,7 @@ if QUEUE_URL:
         print(f"[SQS Error] {e}")
 
 # 2. Check AWS IoT Topic Rules
-iot = boto3.client("iot", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
+iot = boto3.client("iot", region_name=REGION)
 try:
     rules = iot.list_topic_rules().get("rules", [])
     print(f"\n[AWS IoT Rules] Found {len(rules)} rule(s):")
@@ -48,18 +53,16 @@ except Exception as e:
     print(f"[IoT Error] {e}")
 
 # 3. Check EC2 Systemd Services & Logs via SSM
-ssm = boto3.client("ssm", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
+ssm = boto3.client("ssm", region_name=REGION)
 commands = [
     "systemctl status backend-api --no-pager",
     "systemctl status backend-inference --no-pager || true",
     "journalctl -u backend-inference -n 30 --no-pager || true",
-    "journalctl -u backend-api -n 20 --no-pager"
+    "journalctl -u backend-api -n 20 --no-pager",
 ]
 
 res = ssm.send_command(
-    InstanceIds=[INSTANCE_ID],
-    DocumentName="AWS-RunShellScript",
-    Parameters={"commands": commands}
+    InstanceIds=[INSTANCE_ID], DocumentName="AWS-RunShellScript", Parameters={"commands": commands}
 )
 cmd_id = res["Command"]["CommandId"]
 print(f"\n[SSM Diagnostic Command Sent] {cmd_id}")

@@ -2,15 +2,14 @@
 
 import argparse
 import base64
-from datetime import datetime, timezone
-from getpass import getpass
 import json
 import os
-from pathlib import Path
 import sys
+from datetime import datetime, timezone
+from getpass import getpass
+from pathlib import Path
 from time import perf_counter
 from uuid import uuid4
-
 
 BASE_URL = "https://api.meta.ai/v1"
 MODELS = {
@@ -46,15 +45,24 @@ def make_input(mode, image=None, object_name="tomato"):
             "batch B has visible surface damage. Propose a short inspection plan. "
             "Do not invent sensor readings or claim anything is safe to eat."
         )
-    prompt = object_name if mode == "sam" else (
-        "Describe only what is visible in this produce photo: produce types, apparent "
-        "surface damage or discoloration, and visibility limits. Do not infer smell, "
-        "chemical measurements, food safety or exact remaining shelf life."
+    prompt = (
+        object_name
+        if mode == "sam"
+        else (
+            "Describe only what is visible in this produce photo: produce types, apparent "
+            "surface damage or discoloration, and visibility limits. Do not infer smell, "
+            "chemical measurements, food safety or exact remaining shelf life."
+        )
     )
-    return [{"role": "user", "content": [
-        {"type": "input_text", "text": prompt},
-        {"type": "input_image", "image_url": image},
-    ]}]
+    return [
+        {
+            "role": "user",
+            "content": [
+                {"type": "input_text", "text": prompt},
+                {"type": "input_image", "image_url": image},
+            ],
+        }
+    ]
 
 
 def save_json(path, data, key):
@@ -85,8 +93,11 @@ def main(argv=None):
     try:
         from openai import APIConnectionError, APIStatusError, APITimeoutError, OpenAI
     except ImportError:
-        print("Install the smoke-test dependency: python -m pip install -r "
-              "scripts/smoke/requirements.txt", file=sys.stderr)
+        print(
+            "Install the smoke-test dependency: python -m pip install -r "
+            "scripts/smoke/requirements.txt",
+            file=sys.stderr,
+        )
         return 2
 
     key = os.environ.get("MODEL_API_KEY", "").strip()
@@ -110,8 +121,10 @@ def main(argv=None):
     started = perf_counter()
     try:
         with OpenAI(base_url=BASE_URL, api_key=key, timeout=120.0, max_retries=0) as client:
-            request = {"model": MODELS[args.mode],
-                       "input": make_input(args.mode, image, args.object.strip())}
+            request = {
+                "model": MODELS[args.mode],
+                "input": make_input(args.mode, image, args.object.strip()),
+            }
             if args.mode == "sam":
                 # SAM uses its special-token grammar in the output-text lane.
                 with client.responses.stream(**request) as stream:
@@ -129,21 +142,36 @@ def main(argv=None):
             404: "Check model availability for this account.",
             429: "Check rate limits and quota/credits; do not repeatedly retry.",
         }
-        print(f"HTTP {exc.status_code}: {hints.get(exc.status_code, 'Check provider status and retry later.')}", file=sys.stderr)
+        print(
+            f"HTTP {exc.status_code}: {hints.get(exc.status_code, 'Check provider status and retry later.')}",
+            file=sys.stderr,
+        )
         # Preserve the provider's error body, without request headers or credentials.
-        save_json(out / "error.json", {"http_status": exc.status_code,
-                  "request_id": getattr(exc, "request_id", None),
-                  "error": exc.body}, key)
+        save_json(
+            out / "error.json",
+            {
+                "http_status": exc.status_code,
+                "request_id": getattr(exc, "request_id", None),
+                "error": exc.body,
+            },
+            key,
+        )
         print(f"Error detail saved to {out / 'error.json'}", file=sys.stderr)
         return 1
     except (APIConnectionError, APITimeoutError):
-        print("Connection/timeout failure. Check internet, proxy and api.meta.ai access. "
-              "No automatic retry was made.", file=sys.stderr)
+        print(
+            "Connection/timeout failure. Check internet, proxy and api.meta.ai access. "
+            "No automatic retry was made.",
+            file=sys.stderr,
+        )
         return 1
     except Exception as exc:
         # Streaming provider errors must not dump request headers/base64 images.
-        print(f"Request did not complete ({type(exc).__name__}). "
-              "No successful model result has been verified.", file=sys.stderr)
+        print(
+            f"Request did not complete ({type(exc).__name__}). "
+            "No successful model result has been verified.",
+            file=sys.stderr,
+        )
         return 1
 
     text = response.output_text or ""
@@ -162,8 +190,10 @@ def main(argv=None):
         return 1
     if args.mode == "sam":
         print("SAM completed. Encoded segmentation is in output.txt.")
-        print("Next: decode/render it with Meta's SAM parser, or inspect the image in "
-              "the SAM Playground. Completion alone does not validate mask quality.")
+        print(
+            "Next: decode/render it with Meta's SAM parser, or inspect the image in "
+            "the SAM Playground. Completion alone does not validate mask quality."
+        )
     else:
         print("\n" + text.replace(key, "[REDACTED]"))
     return 0

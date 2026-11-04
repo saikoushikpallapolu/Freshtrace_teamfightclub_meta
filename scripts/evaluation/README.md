@@ -1,5 +1,3 @@
-# Evaluation commands
+# Evaluation scripts
 
-Future CLI entry points call reusable logic in src/backend/evaluation. Separate fixture/replay/live records, freeze policy versions and export sanitized manifests plus complete outcome counts.
-
-See [repository architecture](../../docs/repository_architecture.md) for the complete layout and implementation boundaries.
+`validate_prototype.py` checks saved visual inspections and exports a sanitized evaluation report. Its `--live` mode explicitly requests new provider work; read its help and the [visual inspection guide](../../docs/visual_prototype.md) before running it. Reports distinguish provider evidence, geometry checks, and independent evaluation labels.

@@ -1,5 +1,3 @@
-# Unit verification
+# Unit tests
 
-Future focused tests for policy/conflict gates, session validity, contracts and stock arithmetic. Use deterministic inputs; avoid live cloud or model calls.
-
-See [repository architecture](../../docs/repository_architecture.md) for the complete layout and implementation boundaries.
+Offline checks for model request/response boundaries, image orientation, segmentation diagnostics, exact-mask hit maps, contextual crops, bounded Wonder tool calls, and sensor calibration/time/sequence processing. Run `python -m pytest tests/unit -q` after installing development/model dependencies.

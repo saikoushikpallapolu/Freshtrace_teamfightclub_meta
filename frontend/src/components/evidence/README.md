@@ -1,5 +1,3 @@
 # Evidence presentation
 
-Planned PriorityComparison, EvidenceTimeline and Receipt components. Display camera/sensor/combined evidence, real timestamps and policy/model versions. Missing data must never appear as a measured low concern.
-
-See [repository architecture](../../../../docs/repository_architecture.md) for the complete layout and implementation boundaries.
+`InspectionPanel.jsx` displays job status, original/overlay images, exact-mask item selection, category filters, contextual crops, visibility limits, model receipts, and separate human reviews. Results are fetched from persisted observations; browsing a completed inspection does not make another model request.

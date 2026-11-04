@@ -1,10 +1,10 @@
 """Local static preview with byte-range support so MP4 timeline seeking works."""
 
 import argparse
-from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import os
 import re
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 
 class RangeHandler(SimpleHTTPRequestHandler):
@@ -60,6 +60,8 @@ if __name__ == "__main__":
     parser.add_argument("--directory", required=True)
     parser.add_argument("--port", type=int, default=8767)
     args = parser.parse_args()
-    server = ThreadingHTTPServer(("127.0.0.1", args.port), partial(RangeHandler, directory=args.directory))
+    server = ThreadingHTTPServer(
+        ("127.0.0.1", args.port), partial(RangeHandler, directory=args.directory)
+    )
     print(f"Video preview: http://127.0.0.1:{args.port}", flush=True)
     server.serve_forever()

@@ -1,13 +1,15 @@
 from typing import Dict
+
 from backend.contracts.processed import ProcessedReading
+
 
 class BiochemicalEngine:
     def __init__(self):
-        # Calibrated weights for SGP41 produce spoilage dynamics
+        # Signal weights for the configured SGP41 risk heuristic
         # Full rot typically causes a ~15-20% drop in VOC resistance (delta_voc >= 0.15 -> risk >= 90%)
-        self.w_voc_dev = 6.0    # Scale factor for VOC relative resistance drop
-        self.w_nox_dev = 0.5    # Scale factor for NOx secondary deviation
-        self.w_voc_vel = 0.05   # Scale factor for hourly degradation velocity trend
+        self.w_voc_dev = 6.0  # Scale factor for VOC relative resistance drop
+        self.w_nox_dev = 0.5  # Scale factor for NOx secondary deviation
+        self.w_voc_vel = 0.05  # Scale factor for hourly degradation velocity trend
 
     def calculate_risk(self, reading: ProcessedReading) -> Dict[str, float]:
         if not reading.baseline_established:
@@ -15,7 +17,7 @@ class BiochemicalEngine:
                 "biochemical_risk": 0.0,
                 "voc_signal": 0.0,
                 "nox_signal": 0.0,
-                "degradation_velocity": 0.0
+                "degradation_velocity": 0.0,
             }
 
         # SGP41 VOC ticks drop as reducing VOC gases increase (rotting)
@@ -23,11 +25,11 @@ class BiochemicalEngine:
         # A negative relative change means higher volatile presence.
         delta_voc = max(0.0, -reading.voc_relative_change)
         voc_signal = min(1.0, delta_voc * self.w_voc_dev)
-        
+
         # NOx ticks deviation contribution
         delta_nox = abs(reading.nox_relative_change)
         nox_signal = min(0.2, delta_nox * self.w_nox_dev)
-        
+
         # Negative velocity means the VOC resistance is actively dropping (spoilage accelerating)
         # reading.voc_velocity is in raw ticks/second. Normalize by baseline to obtain fractional change per second.
         baseline = reading.raw.voc_raw if (reading.raw and reading.raw.voc_raw > 1000) else 31800.0
@@ -40,13 +42,13 @@ class BiochemicalEngine:
 
         # Compute multi-signal biochemical score
         raw_score = voc_signal + nox_signal + voc_vel_risk
-        
-        # Clamp between minimum baseline floor of 0.045 (4.5% inherent biological baseline) and 1.0 (maximum risk)
+
+        # Clamp between minimum baseline floor of 0.045 (4.5% configured score floor) and 1.0 (maximum risk)
         risk_score = min(1.0, max(0.045, raw_score))
 
         return {
             "biochemical_risk": round(risk_score, 4),
             "voc_signal": round(voc_signal, 4),
             "nox_signal": round(nox_signal, 4),
-            "degradation_velocity": round(degradation_velocity, 6)
+            "degradation_velocity": round(degradation_velocity, 6),
         }

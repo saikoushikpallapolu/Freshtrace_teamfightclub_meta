@@ -21,9 +21,17 @@ def observe_image(client, data_url: str):
         input=image_input(
             "Record only produce types and appearance visible in this image. Include visibility "
             "limits. Do not infer smell, chemicals, food safety or exact remaining life. "
-            "Return JSON matching the supplied schema.", data_url),
-        text={"format": {"type": "json_schema", "name": "visual_observation",
-                         "strict": True, "schema": schema}},
+            "Return JSON matching the supplied schema.",
+            data_url,
+        ),
+        text={
+            "format": {
+                "type": "json_schema",
+                "name": "visual_observation",
+                "strict": True,
+                "schema": schema,
+            }
+        },
         max_output_tokens=4096,
     )
     if response.status != "completed":

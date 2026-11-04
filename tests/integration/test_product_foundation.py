@@ -89,7 +89,7 @@ def test_legacy_rows_survive_repeated_migration(settings):
         )
         assert (
             connection.scalar(text("SELECT version_num FROM alembic_version"))
-            == "0003_perception_jobs"
+            == "0004_sensor_snapshot"
         )
     assert "product_model_calls" in inspect(engine).get_table_names()
     engine.dispose()

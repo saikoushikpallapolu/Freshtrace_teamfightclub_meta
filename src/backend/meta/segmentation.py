@@ -51,11 +51,27 @@ def render_segmentation(result, image: Image.Image, output_dir: Path) -> dict:
         overlay = Image.alpha_composite(overlay, tint)
         draw = ImageDraw.Draw(overlay)
         draw.rectangle((left, top, right - 1, bottom - 1), outline=(*color, 255), width=3)
-        draw.text((left + 3, top + 3), f"object {record.object_id}", fill=(255, 255, 255, 255),
-                  stroke_width=1, stroke_fill=(0, 0, 0, 255))
-        objects.append({"object_id": record.object_id, "bounds": list(bounds),
-                        "foreground_pixels": pixels, "mask_file": filename})
+        draw.text(
+            (left + 3, top + 3),
+            f"object {record.object_id}",
+            fill=(255, 255, 255, 255),
+            stroke_width=1,
+            stroke_fill=(0, 0, 0, 255),
+        )
+        objects.append(
+            {
+                "object_id": record.object_id,
+                "bounds": list(bounds),
+                "foreground_pixels": pixels,
+                "mask_file": filename,
+            }
+        )
     overlay.convert("RGB").save(output_dir / "sam_overlay.jpg", quality=95)
-    return {"width": image.width, "height": image.height, "mask_count": len(objects),
-            "objects": objects, "diagnostics": [asdict(d) for d in result.diagnostics],
-            "nonempty_masks": bool(objects)}
+    return {
+        "width": image.width,
+        "height": image.height,
+        "mask_count": len(objects),
+        "objects": objects,
+        "diagnostics": [asdict(d) for d in result.diagnostics],
+        "nonempty_masks": bool(objects),
+    }

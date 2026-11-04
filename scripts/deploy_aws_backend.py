@@ -1,33 +1,40 @@
+import json
 import os
-import sys
 import tarfile
 import tempfile
 import time
-import json
+from ipaddress import ip_network
+
 import boto3
 import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
-ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
-SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 REGION = os.getenv("AWS_REGION", "ap-south-1")
-BUCKET_NAME = os.getenv("AWS_S3_BUCKET", "backend-raw-archive-000000000000")
+
+
+admin_cidr = os.getenv("AWS_ADMIN_CIDR", "").strip()
+if not admin_cidr or ip_network(admin_cidr).prefixlen == 0:
+    raise SystemExit("Set AWS_ADMIN_CIDR to a trusted network before provisioning the API server.")
+
+BUCKET_NAME = os.getenv("AWS_S3_BUCKET", "").strip()
+if not BUCKET_NAME:
+    raise SystemExit("Set AWS_S3_BUCKET before deploying the backend.")
 
 print("=" * 60)
 print(f"Deploying Application Backend to AWS EC2 [{REGION}]")
 print("=" * 60)
 
 # 1. AWS Clients
-sts = boto3.client("sts", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
+sts = boto3.client("sts", region_name=REGION)
 account_id = sts.get_caller_identity()["Account"]
 print(f"[AWS] Authenticated as Account: {account_id}")
 
-s3 = boto3.client("s3", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
-ec2 = boto3.client("ec2", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
-iam = boto3.client("iam", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
-ssm = boto3.client("ssm", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
+s3 = boto3.client("s3", region_name=REGION)
+ec2 = boto3.client("ec2", region_name=REGION)
+iam = boto3.client("iam", region_name=REGION)
+ssm = boto3.client("ssm", region_name=REGION)
 
 # 2. Package Backend Bundle
 print("\n[Step 1/5] Packaging backend code bundle...")
@@ -35,11 +42,16 @@ tar_dir = os.path.join(tempfile.gettempdir(), "backend_deploy")
 os.makedirs(tar_dir, exist_ok=True)
 tar_path = os.path.join(tar_dir, "backend-backend.tar.gz")
 
+
 def exclude_filter(tarinfo):
     name = tarinfo.name
-    if any(x in name for x in ["__pycache__", ".pytest_cache", ".git", "venv", "node_modules", ".ds_store"]):
+    if any(
+        x in name
+        for x in ["__pycache__", ".pytest_cache", ".git", "venv", "node_modules", ".ds_store"]
+    ):
         return None
     return tarinfo
+
 
 with tarfile.open(tar_path, "w:gz") as tar:
     for item in ["src", "config", "requirements.txt", "pyproject.toml", ".env", "frontend/dist"]:
@@ -63,18 +75,20 @@ profile_name = "ApplicationEC2Profile"
 
 trust_doc = {
     "Version": "2012-10-17",
-    "Statement": [{
-        "Effect": "Allow",
-        "Principal": {"Service": "ec2.amazonaws.com"},
-        "Action": "sts:AssumeRole"
-    }]
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {"Service": "ec2.amazonaws.com"},
+            "Action": "sts:AssumeRole",
+        }
+    ],
 }
 
 try:
     iam.create_role(
         RoleName=role_name,
         AssumeRolePolicyDocument=json.dumps(trust_doc),
-        Description="Role for Application Backend EC2 instance"
+        Description="Role for Application Backend EC2 instance",
     )
     print(f"  -> Created IAM Role: {role_name}")
 except iam.exceptions.EntityAlreadyExistsException:
@@ -86,12 +100,12 @@ policies = [
     "arn:aws:iam::aws:policy/AmazonSNSFullAccess",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
     "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
-    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
 ]
 for p in policies:
     try:
         iam.attach_role_policy(RoleName=role_name, PolicyArn=p)
-    except Exception as e:
+    except Exception:
         pass
 
 try:
@@ -124,11 +138,11 @@ try:
     sg_res = ec2.create_security_group(
         GroupName=sg_name,
         Description="Security Group for Application Backend API & Inference Worker",
-        VpcId=default_vpc_id
+        VpcId=default_vpc_id,
     )
     backend_sg_id = sg_res["GroupId"]
     print(f"  -> Created Security Group: {backend_sg_id}")
-    
+
     # Ingress rules: 80, 8080, 22
     ec2.authorize_security_group_ingress(
         GroupId=backend_sg_id,
@@ -137,26 +151,29 @@ try:
                 "IpProtocol": "tcp",
                 "FromPort": 80,
                 "ToPort": 80,
-                "IpRanges": [{"CidrIp": "0.0.0.0/0", "Description": "HTTP"}]
+                "IpRanges": [{"CidrIp": admin_cidr, "Description": "HTTP"}],
             },
             {
                 "IpProtocol": "tcp",
                 "FromPort": 8080,
                 "ToPort": 8080,
-                "IpRanges": [{"CidrIp": "0.0.0.0/0", "Description": "FastAPI Port"}]
+                "IpRanges": [{"CidrIp": admin_cidr, "Description": "FastAPI Port"}],
             },
             {
                 "IpProtocol": "tcp",
                 "FromPort": 22,
                 "ToPort": 22,
-                "IpRanges": [{"CidrIp": "0.0.0.0/0", "Description": "SSH"}]
-            }
-        ]
+                "IpRanges": [{"CidrIp": admin_cidr, "Description": "SSH"}],
+            },
+        ],
     )
 except ec2.exceptions.ClientError as e:
     if "InvalidGroup.Duplicate" in str(e):
         sgs = ec2.describe_security_groups(
-            Filters=[{"Name": "group-name", "Values": [sg_name]}, {"Name": "vpc-id", "Values": [default_vpc_id]}]
+            Filters=[
+                {"Name": "group-name", "Values": [sg_name]},
+                {"Name": "vpc-id", "Values": [default_vpc_id]},
+            ]
         )["SecurityGroups"]
         backend_sg_id = sgs[0]["GroupId"]
         print(f"  -> Security Group already exists: {backend_sg_id}")
@@ -166,7 +183,9 @@ except ec2.exceptions.ClientError as e:
 # 5. Launch EC2 Instance
 print("\n[Step 4/5] Launching Amazon Linux 2023 EC2 Instance...")
 # Get latest AL2023 AMI
-ami_param = ssm.get_parameter(Name="/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64")
+ami_param = ssm.get_parameter(
+    Name="/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
+)
 ami_id = ami_param["Parameter"]["Value"]
 print(f"  -> AMI: {ami_id} (Amazon Linux 2023 x86_64)")
 
@@ -174,7 +193,7 @@ print(f"  -> AMI: {ami_id} (Amazon Linux 2023 x86_64)")
 existing_instances = ec2.describe_instances(
     Filters=[
         {"Name": "tag:Project", "Values": ["Application"]},
-        {"Name": "instance-state-name", "Values": ["pending", "running"]}
+        {"Name": "instance-state-name", "Values": ["pending", "running"]},
     ]
 )
 
@@ -296,15 +315,15 @@ if not instance_id:
                         "ResourceType": "instance",
                         "Tags": [
                             {"Key": "Name", "Value": "backend-backend-server"},
-                            {"Key": "Project", "Value": "Application"}
-                        ]
+                            {"Key": "Project", "Value": "Application"},
+                        ],
                     }
-                ]
+                ],
             )
             break
         except ec2.exceptions.ClientError as e:
             if "iamInstanceProfile" in str(e) and attempt < 9:
-                print(f"  -> Waiting for IAM instance profile propagation ({attempt+1}/10)...")
+                print(f"  -> Waiting for IAM instance profile propagation ({attempt + 1}/10)...")
                 time.sleep(6)
             else:
                 raise e
@@ -314,15 +333,24 @@ if not instance_id:
 
     waiter = ec2.get_waiter("instance_running")
     waiter.wait(InstanceIds=[instance_id])
-    
+
     inst_desc = ec2.describe_instances(InstanceIds=[instance_id])["Reservations"][0]["Instances"][0]
     public_ip = inst_desc.get("PublicIpAddress")
     public_dns = inst_desc.get("PublicDnsName")
 else:
     print(f"  -> Updating existing instance {instance_id} with new deployment...")
-    # Trigger update via SSM or user-data
-    # If instance exists, we can write a trigger command via SSM or wait for it
-    print(f"  -> Instance IP: {public_ip}")
+    command = ssm.send_command(
+        InstanceIds=[instance_id],
+        DocumentName="AWS-RunShellScript",
+        Parameters={"commands": [user_data_script], "executionTimeout": ["900"]},
+    )
+    command_id = command["Command"]["CommandId"]
+    print(f"  -> Updating backend services via SSM command {command_id}")
+    ssm.get_waiter("command_executed").wait(
+        CommandId=command_id,
+        InstanceId=instance_id,
+        WaiterConfig={"Delay": 10, "MaxAttempts": 90},
+    )
 
 print(f"\n[Step 5/5] Waiting for Backend API service to initialize at http://{public_ip}:8080 ...")
 api_url = f"http://{public_ip}:8080"
@@ -348,10 +376,19 @@ if success:
     print(f"  Health Check:       {api_url}/health")
     print(f"  Device Status:      {api_url}/devices/Device-01/status")
     print("=" * 60)
-    
+
     # Save backend endpoint to a local file for frontend deployment
     with open("backend_endpoint.json", "w") as f:
-        json.dump({"api_url": api_url, "public_ip": public_ip, "public_dns": public_dns, "instance_id": instance_id}, f, indent=2)
+        json.dump(
+            {
+                "api_url": api_url,
+                "public_ip": public_ip,
+                "public_dns": public_dns,
+                "instance_id": instance_id,
+            },
+            f,
+            indent=2,
+        )
 else:
     print("\n[WARN] Instance is running, but /health has not yet responded. Check cloud-init logs.")
     print(f"Instance ID: {instance_id}, IP: {public_ip}")

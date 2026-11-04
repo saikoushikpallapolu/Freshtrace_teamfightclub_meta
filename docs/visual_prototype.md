@@ -1,6 +1,6 @@
 # Visual inspection prototype
 
-Implemented on `codex/meta-model-validation`, 2 November 2026. Product name undecided.
+Current local visual inspection workflow. See [setup](setup.md) for complete installation, environment configuration, and dashboard ports.
 This is a functioning local visual-inspection prototype, not a validated freshness
 classifier or the complete sensor/agent product.
 
@@ -32,7 +32,7 @@ From the repository root, using Python 3.12:
 .venv\Scripts\python.exe scripts/run_product.py --ask-key
 ```
 
-Enter the Meta key at the hidden terminal prompt. It is held in process memory,
+The launcher also reads `MODEL_API_KEY` from root `.env`. With `--ask-key`, enter the key at the hidden terminal prompt. It is held in process memory,
 never saved or sent to the browser. Alternatively, provide `MODEL_API_KEY` through
 the process environment and omit `--ask-key`. Do not paste the key into source,
 the frontend or Git. Startup makes no model calls unless previously queued jobs
@@ -49,8 +49,7 @@ npm run dev -- --host 127.0.0.1 --port 5173
 Open `http://127.0.0.1:5173`. The API listens only on loopback port 8080. Database
 and media defaults remain `product_local.db` and `data/media/uploads`. Set
 `PRODUCT_DATABASE_URL`/`PRODUCT_MEDIA_ROOT` before starting to use another local
-database/media pair. The current review preview uses `tmp/product-preview.db`
-and `tmp/product-preview-media`; those are ignored development artifacts.
+database/media pair. Database and media locations can be overridden independently in `.env`; back them up together.
 
 Without a key, batch/photo/history and public imports work, but new live analysis
 is disabled. The original combined telemetry API also exposes the product routes,

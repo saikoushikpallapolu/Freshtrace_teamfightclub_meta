@@ -1,28 +1,33 @@
-import os
 import json
+import os
 import time
+from copy import deepcopy
+
 import boto3
-from datetime import datetime
 from dotenv import load_dotenv
 
-from backend.ingestion.processor import IngestionProcessor
-from backend.processing.signal_processor import SignalProcessor
 from backend.biochemical.engine import BiochemicalEngine
-from backend.thermal.engine import ThermalEngine
 from backend.detection.onset import OnsetDetector
-from backend.rul.estimator import RULEstimator
-from backend.fusion.risk import RiskFusion
 from backend.evidence.events import EvidenceEngine
+from backend.fusion.risk import RiskFusion
+from backend.ingestion.processor import IngestionProcessor
 from backend.persistence.db import SessionLocal, init_db
-from backend.persistence.models import SessionModel, RawTelemetryModel, EventModel, StateSnapshotModel
+from backend.persistence.models import (
+    EventModel,
+    RawTelemetryModel,
+    SessionModel,
+    StateSnapshotModel,
+)
+from backend.processing.signal_processor import SignalProcessor
+from backend.rul.estimator import RULEstimator
+from backend.thermal.engine import ThermalEngine
 
 load_dotenv()
 
-ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
-SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 REGION = os.getenv("AWS_REGION", "ap-south-1")
 QUEUE_URL = os.getenv("AWS_SQS_QUEUE_URL")
 SNS_TOPIC_ARN = os.getenv("AWS_SNS_TOPIC_ARN")
+
 
 class InferenceEngineService:
     def __init__(self):
@@ -36,19 +41,71 @@ class InferenceEngineService:
         self.risk_fusion = RiskFusion()
         self.evidence_engine = EvidenceEngine()
 
-        self.sqs = boto3.client("sqs", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION) if QUEUE_URL else None
-        self.sns = boto3.client("sns", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION) if SNS_TOPIC_ARN else None
-        
+        self.sqs = (
+            boto3.client(
+                "sqs",
+                region_name=REGION,
+            )
+            if QUEUE_URL
+            else None
+        )
+        self.sns = (
+            boto3.client(
+                "sns",
+                region_name=REGION,
+            )
+            if SNS_TOPIC_ARN
+            else None
+        )
+
         self.last_known_state = {}
         self.last_alert_timestamps = {}
-        print("[InferenceService] Initialized and connected to AWS SQS & SNS.")
+        print(
+            f"[InferenceService] Ready. SQS configured: {bool(self.sqs)}; SNS configured: {bool(self.sns)}"
+        )
 
     def process_telemetry_payload(self, payload: dict) -> dict:
         """Runs the entire 7-phase Application pipeline on a raw sensor payload."""
-        raw = self.ingestor.process(payload)
+        device = str(payload.get("device_id", ""))
+        previous_sequence = self.ingestor.sequence_trackers.get(device)
+        try:
+            raw = self.ingestor.process(payload)
+        except Exception:
+            self._restore_sequence(device, previous_sequence)
+            raise
         if not raw:
             return None
 
+        session = raw.session_id
+        stores = (
+            self.signal_engine.sessions,
+            self.thermal_engine.sessions,
+            self.onset_detector.sessions,
+            self.evidence_engine.last_onset_states,
+        )
+        checkpoints = [deepcopy(store.get(session)) for store in stores]
+        had_baseline = session in self.evidence_engine.baseline_tracked
+        try:
+            return self._process_reading(raw)
+        except Exception:
+            # Failed persistence must not consume a sequence or advance the baseline/trends.
+            self._restore_sequence(device, previous_sequence)
+            for store, checkpoint in zip(stores, checkpoints):
+                if checkpoint is None:
+                    store.pop(session, None)
+                else:
+                    store[session] = checkpoint
+            if not had_baseline:
+                self.evidence_engine.baseline_tracked.discard(session)
+            raise
+
+    def _restore_sequence(self, device, previous):
+        if previous is None:
+            self.ingestor.sequence_trackers.pop(device, None)
+        else:
+            self.ingestor.sequence_trackers[device] = previous
+
+    def _process_reading(self, raw):
         # 1. Signal Processing
         processed = self.signal_engine.process(raw)
 
@@ -62,7 +119,9 @@ class InferenceEngineService:
         rul = self.rul_estimator.estimate(bio["biochemical_risk"], bio["degradation_velocity"])
 
         # 4. Evidence Events
-        events = self.evidence_engine.evaluate(raw.session_id, raw.received_at, processed, bio, onset)
+        events = self.evidence_engine.evaluate(
+            raw.session_id, raw.received_at, processed, bio, onset
+        )
 
         result = {
             "device_id": raw.device_id,
@@ -81,7 +140,9 @@ class InferenceEngineService:
             "humidity_pct": raw.humidity_pct,
             "voc_raw": raw.voc_raw,
             "nox_raw": raw.nox_raw,
-            "events": events
+            "voc_velocity": processed.voc_velocity,
+            "baseline_established": processed.baseline_established,
+            "events": events,
         }
 
         # 5. Persist to RDS Database (Hot State & Evidence Ledger)
@@ -95,8 +156,8 @@ class InferenceEngineService:
         return result
 
     def _persist_to_db(self, raw, state, events):
+        db = SessionLocal()
         try:
-            db = SessionLocal()
             # Session check
             existing_session = db.query(SessionModel).filter_by(session_id=raw.session_id).first()
             if not existing_session:
@@ -105,7 +166,7 @@ class InferenceEngineService:
                     device_id=raw.device_id,
                     food_type=raw.food_type,
                     status="ACTIVE",
-                    started_at=raw.received_at
+                    started_at=raw.received_at,
                 )
                 db.add(new_session)
 
@@ -116,7 +177,7 @@ class InferenceEngineService:
                 temperature_c=raw.temperature_c,
                 humidity_pct=raw.humidity_pct,
                 voc_raw=raw.voc_raw,
-                nox_raw=raw.nox_raw
+                nox_raw=raw.nox_raw,
             )
             db.add(telemetry_row)
 
@@ -126,7 +187,8 @@ class InferenceEngineService:
                 timestamp=raw.received_at,
                 spoilage_state=state["state"],
                 overall_risk=state["overall_risk"],
-                rul_hours=state["rul_hours"]
+                rul_hours=state["rul_hours"],
+                payload=state,
             )
             db.add(snapshot_row)
 
@@ -137,14 +199,16 @@ class InferenceEngineService:
                     event=ev["event"],
                     timestamp=ev["timestamp"],
                     severity=ev["severity"],
-                    evidence=ev["evidence"]
+                    evidence=ev["evidence"],
                 )
                 db.add(event_row)
 
             db.commit()
-            db.close()
         except Exception as e:
-            print(f"[DB ERROR] Failed to persist snapshot/event: {e}")
+            db.rollback()
+            raise RuntimeError("Failed to persist sensor evidence") from e
+        finally:
+            db.close()
 
     def _publish_sns_alert(self, state):
         if not self.sns or not SNS_TOPIC_ARN:
@@ -155,7 +219,6 @@ class InferenceEngineService:
         # Cooldown: 120 seconds between alerts per device to prevent flooding
         if now_ts - last_alert < 120:
             return
-        self.last_alert_timestamps[device_id] = now_ts
         try:
             risk_pct = round(state["overall_risk"] * 100, 1)
             message = {
@@ -170,16 +233,19 @@ class InferenceEngineService:
                 "sensor_telemetry": {
                     "voc_raw_ticks": state.get("voc_raw"),
                     "temperature_c": state.get("temperature_c"),
-                    "humidity_pct": state.get("humidity_pct")
+                    "humidity_pct": state.get("humidity_pct"),
                 },
-                "recommended_action": f"CRITICAL: Spoilage risk reached {risk_pct}% (>= 80% threshold). Immediate refrigeration or disposal required."
+                "recommended_action": "Inspect the stored food and refrigeration conditions.",
             }
             self.sns.publish(
                 TopicArn=SNS_TOPIC_ARN,
                 Subject=f"🚨 ALERT: project High Spoilage Risk ({risk_pct}%) on {state['device_id']}",
-                Message=json.dumps(message, indent=2)
+                Message=json.dumps(message, indent=2),
             )
-            print(f"[SNS ALERT SENT] Spoilage risk ({risk_pct}%) published to AWS SNS: {SNS_TOPIC_ARN}")
+            self.last_alert_timestamps[device_id] = now_ts
+            print(
+                f"[SNS ALERT SENT] Spoilage risk ({risk_pct}%) published to AWS SNS: {SNS_TOPIC_ARN}"
+            )
         except Exception as e:
             print(f"[SNS ERROR] Failed to publish alert: {e}")
 
@@ -196,7 +262,7 @@ class InferenceEngineService:
                     QueueUrl=QUEUE_URL,
                     MaxNumberOfMessages=5,
                     WaitTimeSeconds=10,
-                    VisibilityTimeout=30
+                    VisibilityTimeout=30,
                 )
                 messages = response.get("Messages", [])
                 for msg in messages:
@@ -206,7 +272,9 @@ class InferenceEngineService:
                     # Process the telemetry payload
                     result = self.process_telemetry_payload(body)
                     if result:
-                        print(f"[{result['device_id']}] Processed: State={result['state']} | Risk={result['overall_risk']:.3f} ({result['dominant_risk']}) | RUL={result['rul_hours']}h")
+                        print(
+                            f"[{result['device_id']}] Processed: State={result['state']} | Risk={result['overall_risk']:.3f} ({result['dominant_risk']}) | RUL={result['rul_hours']}h"
+                        )
 
                     # Delete message from SQS upon successful processing
                     self.sqs.delete_message(QueueUrl=QUEUE_URL, ReceiptHandle=receipt_handle)
@@ -217,6 +285,7 @@ class InferenceEngineService:
             except Exception as e:
                 print(f"[STREAM ERROR] {e}")
                 time.sleep(2)
+
 
 if __name__ == "__main__":
     service = InferenceEngineService()

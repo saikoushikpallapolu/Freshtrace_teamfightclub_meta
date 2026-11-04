@@ -3,9 +3,9 @@
 import json
 from types import SimpleNamespace
 
+import pytest
 from meta_sam_parser import CompletedOutcome, image_segmentation_format
 from PIL import Image
-import pytest
 
 from backend.meta.client import image_input, load_image, make_client
 from backend.meta.planner import plan_with_history
@@ -54,10 +54,16 @@ def test_empty_sam_matches_not_a_visual_pass(tmp_path):
 
 def test_vision_requires_limits_and_forbids_risk_probability():
     with pytest.raises(ValueError):
-        VisualObservation(produce_types=["tomato"], visible_observations=["red"], visibility_limits=[])
+        VisualObservation(
+            produce_types=["tomato"], visible_observations=["red"], visibility_limits=[]
+        )
     with pytest.raises(ValueError):
-        VisualObservation(produce_types=["tomato"], visible_observations=["red"],
-                          visibility_limits=["underside hidden"], risk_probability=0.99)
+        VisualObservation(
+            produce_types=["tomato"],
+            visible_observations=["red"],
+            visibility_limits=["underside hidden"],
+            risk_probability=0.99,
+        )
 
 
 class Item:
@@ -79,12 +85,24 @@ class FakeClient:
     def create(self, **kwargs):
         self.calls.append(kwargs)
         if len(self.calls) == 1 or self.repeat:
-            return SimpleNamespace(status="completed", output_text="", output=[
-                Item("reasoning", id="reason-1"),
-                Item("function_call", name="get_batch_history", arguments=json.dumps(self.arguments),
-                     call_id="call-1"),
-            ])
-        return SimpleNamespace(status="completed", output_text="Take a new photo; sensor evidence is missing.", output=[])
+            return SimpleNamespace(
+                status="completed",
+                output_text="",
+                output=[
+                    Item("reasoning", id="reason-1"),
+                    Item(
+                        "function_call",
+                        name="get_batch_history",
+                        arguments=json.dumps(self.arguments),
+                        call_id="call-1",
+                    ),
+                ],
+            )
+        return SimpleNamespace(
+            status="completed",
+            output_text="Take a new photo; sensor evidence is missing.",
+            output=[],
+        )
 
 
 def test_planner_real_tool_result_round_trip_contract():

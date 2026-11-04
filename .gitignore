@@ -3,12 +3,17 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
+*.egg-info/
+.coverage
+htmlcov/
 
 # Virtual environment
 .venv/
 
 # Environment & Secrets
 .env
+.env.*
+!.env.example
 secrets.h
 Sensor/secrets.h
 
@@ -33,6 +38,9 @@ frontend/dist/
 # Generated document previews and intermediate exports
 tmp/
 output/
+.firecrawl/
+backend_endpoint.json
+frontend_endpoint.json
 
 # Local product media and evaluation runs (keep directory documentation)
 data/media/*

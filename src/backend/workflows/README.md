@@ -1,5 +1,5 @@
-# Product workflow rules
+# Product workflows
 
-Planned files: batches.py, sessions.py, policy.py, investigation.py, tasks.py and outcomes.py. Own batch/session identity, device locks, validity, deterministic priority, bounded investigations, due checks and human-confirmed quantity changes. Persist authoritative state; do not rely on model chat memory.
+`perception.py` owns durable analysis enqueue/claim/complete/fail transitions, provider-call receipts, explicit retry boundaries, and worker leases. A claimed attempt runs the Meta inspection pipeline and publishes persisted evidence for the API/UI. The optional injected pipeline supports offline integration tests without a provider request.
 
-See [repository architecture](../../../docs/repository_architecture.md) for the complete layout and implementation boundaries.
+Future investigation and stock-action workflows are tracked in the [implementation plan](../../../docs/phased_implementation_plan.md).

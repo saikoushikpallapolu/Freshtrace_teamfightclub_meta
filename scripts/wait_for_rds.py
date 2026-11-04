@@ -1,20 +1,19 @@
 import os
 import sys
 import time
-import boto3
 from pathlib import Path
+
+import boto3
 from dotenv import load_dotenv
 
 sys.path.append(str(Path(__file__).resolve().parent.parent / "src"))
 load_dotenv()
 
-ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
-SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 REGION = os.getenv("AWS_REGION", "ap-south-1")
 DB_IDENTIFIER = os.getenv("AWS_RDS_IDENTIFIER", "backend-db")
 
 print(f"Waiting for Amazon RDS instance '{DB_IDENTIFIER}' to reach 'available' status...")
-rds = boto3.client("rds", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
+rds = boto3.client("rds", region_name=REGION)
 
 while True:
     dbs = rds.describe_db_instances(DBInstanceIdentifier=DB_IDENTIFIER)["DBInstances"]
@@ -29,10 +28,7 @@ while True:
         with open(".env", "r") as f:
             env_content = f.read()
 
-        updates = {
-            "AWS_RDS_ENDPOINT": endpoint,
-            "AWS_RDS_PORT": port
-        }
+        updates = {"AWS_RDS_ENDPOINT": endpoint, "AWS_RDS_PORT": port}
         for k, v in updates.items():
             if f"{k}=" in env_content:
                 lines = env_content.splitlines()
@@ -48,6 +44,7 @@ while True:
 
         # Re-initialize DB tables on the live RDS PostgreSQL
         from backend.persistence.db import init_db
+
         init_db()
         print("Schema successfully migrated to Amazon RDS PostgreSQL!")
         break

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   ShieldCheck, 
   AlertTriangle, 
@@ -13,24 +13,10 @@ import {
   RefreshCw, 
   Snowflake,
   SunMedium,
-  Sliders,
   Layers,
-  ArrowRight,
   Info,
   CheckCircle2,
-  Target,
-  Cpu,
-  Zap,
-  TrendingDown,
-  Scale,
-  FileText,
-  Award,
-  Sparkles,
-  Check,
   X,
-  Database,
-  CloudLightning,
-  BarChart3,
   Bell,
   Mail,
   Phone,
@@ -38,80 +24,27 @@ import {
 } from 'lucide-react';
 import './App.css';
 
-const getApiBase = () => {
-  if (typeof window === 'undefined') return 'http://127.0.0.1:8080';
-  if (window.__API_BASE__) return window.__API_BASE__;
-  if (import.meta.env.VITE_API_BASE) return import.meta.env.VITE_API_BASE;
-  
-  // When running on Cloudflare HTTPS Tunnel, EC2 direct, or same-origin deployment
-  if (
-    window.location.hostname.includes('trycloudflare.com') ||
-    window.location.hostname === '127.0.0.1' ||
-    window.location.port === '8080' ||
-    window.location.port === '80'
-  ) {
-    return window.location.origin;
-  }
-
-  // Fallback for S3 bucket website or local dev server (localhost:5180)
-  return 'http://127.0.0.1:8080';
-};
-
-const API_BASE = getApiBase();
+const API_BASE = (import.meta.env.VITE_DEVICE_API_BASE || '').replace(/\/$/, '');
+const percentage = v => v == null ? '—' : Math.round(v * 100);
 
 export default function App() {
-  const [deviceId] = useState('Device-01');
-  const [foodType, setFoodType] = useState('tomato');
-  const [activeTab, setActiveTab] = useState('factors'); // 'factors' | 'telemetry' | 'about'
-
-  // Core Intelligence Values (Minimum risk floor of 4.5% even in optimal conditions)
-  const [riskScore, setRiskScore] = useState(0.048);
-  const [rulHours, setRulHours] = useState(72.0);
-  const [bioRisk, setBioRisk] = useState(0.048);
-  const [thermalRisk, setThermalRisk] = useState(0.020);
-  const [degradationVelocity, setDegradationVelocity] = useState(-0.002);
-
-  // Exact Sensor Metrics
-  const [sensor, setSensor] = useState({
-    voc_raw: 31521,
-    nox_raw: 16769,
-    temperature_c: 29.8,
-    humidity_pct: 67.5
-  });
-
-  // Timestamped Rolling History for Time-Series Curves
-  const [vocHistory, setVocHistory] = useState(() => {
-    const now = new Date();
-    return [31720, 31690, 31660, 31630, 31600, 31580, 31560, 31521].map((v, i) => {
-      const d = new Date(now.getTime() - (7 - i) * 15000);
-      return {
-        value: v,
-        timeStr: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-        time: d
-      };
-    });
-  });
-
-  const [tempHistory, setTempHistory] = useState(() => {
-    const now = new Date();
-    return [29.4, 29.5, 29.6, 29.7, 29.7, 29.8, 29.8, 29.8].map((v, i) => {
-      const d = new Date(now.getTime() - (7 - i) * 15000);
-      return {
-        value: v,
-        timeStr: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-        time: d
-      };
-    });
-  });
-
-  const [velocityHistory, setVelocityHistory] = useState([
-    -0.001, -0.001, -0.002, -0.002, -0.002, -0.002, -0.002, -0.002
-  ]);
-
-  // Live Timestamp & Connection Tracking
-  const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [devices, setDevices] = useState([]);
+  const [deviceId, setDeviceId] = useState('');
+  const [activeTab, setActiveTab] = useState('factors');
+  const [hasTelemetry, setHasTelemetry] = useState(false);
+  const [feedError, setFeedError] = useState('');
+  const [riskScore, setRiskScore] = useState(null);
+  const [rulHours, setRulHours] = useState(null);
+  const [rulWindow, setRulWindow] = useState({});
+  const [bioRisk, setBioRisk] = useState(null);
+  const [thermalRisk, setThermalRisk] = useState(null);
+  const [degradationVelocity, setDegradationVelocity] = useState(null);
+  const [sensor, setSensor] = useState({});
+  const [vocHistory, setVocHistory] = useState([]);
+  const [tempHistory, setTempHistory] = useState([]);
+  const [lastUpdated, setLastUpdated] = useState(null);
   const [secondsAgo, setSecondsAgo] = useState(0);
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(false);
 
   // Hover state for interactive time markers on charts
   const [hoveredPoint, setHoveredPoint] = useState(null);
@@ -128,7 +61,7 @@ export default function App() {
     }
     return 'unsupported';
   });
-  const [lastNotifSentAt, setLastNotifSentAt] = useState(0);
+  const lastNotifSentAt = useRef(0);
 
   // Request native OS/Browser notification permissions
   const requestBrowserNotificationPermission = async () => {
@@ -143,14 +76,14 @@ export default function App() {
         setSubResult({ success: true, message: '🎉 Browser notifications enabled! You will receive instant desktop alerts whenever Spoilage Risk reaches 80%.' });
         try {
           new Notification("Application · Browser Alerts Active", {
-            body: "Instant desktop alerts connected to Device-01 (Risk ≥ 80%).",
+            body: `Desktop alerts enabled for ${deviceId || 'connected devices'} (Risk ≥ 80%).`,
             icon: "/favicon.ico"
           });
-        } catch (e) {}
+        } catch {}
       } else if (permission === 'denied') {
         setSubResult({ success: false, message: 'Notification permission was denied. Please allow notifications in your browser URL bar settings.' });
       }
-    } catch (err) {
+    } catch {
       setSubResult({ success: false, message: 'Failed to request notification permission.' });
     }
   };
@@ -161,11 +94,11 @@ export default function App() {
     if (Notification.permission === 'granted') {
       try {
         new Notification("🚨 project Critical Alert (Test)", {
-          body: "SIMULATED WARNING: Spoilage risk at 89%! Biochemical VOC threshold exceeded.",
+          body: "Test notification: your browser alert channel is working.",
           icon: "/favicon.ico"
         });
         setSubResult({ success: true, message: 'Test notification sent directly to your OS / desktop notification center!' });
-      } catch (e) {
+      } catch {
         setSubResult({ success: false, message: 'Error triggering desktop notification.' });
       }
     } else {
@@ -175,13 +108,13 @@ export default function App() {
 
   // Automatically trigger native browser desktop notification whenever Risk >= 80%
   useEffect(() => {
-    if (riskScore >= 0.80 && browserNotifPermission === 'granted') {
+    if (isOnline && riskScore >= 0.80 && browserNotifPermission === 'granted') {
       const now = Date.now();
-      if (now - lastNotifSentAt > 60000) { // 60s cooldown
-        setLastNotifSentAt(now);
+      if (now - lastNotifSentAt.current > 60000) { // 60s cooldown
+        lastNotifSentAt.current = now;
         try {
-          new Notification(`🚨 CRITICAL SPOILAGE DETECTED: ${Math.round(riskScore * 100)}% RISK`, {
-            body: `project Node-01 has detected severe spoilage conditions (${Math.round(riskScore * 100)}% Spoilage Risk). Immediate cold-chain inspection or refrigeration required.`,
+          new Notification(`🚨 SENSOR INSPECTION ALERT: ${percentage(riskScore)}% RISK`, {
+            body: `${deviceId} has detected elevated sensor risk (${percentage(riskScore)}% Spoilage Risk). Immediate cold-chain inspection or refrigeration required.`,
             icon: "/favicon.ico",
             tag: 'project-spoilage-alert'
           });
@@ -190,102 +123,60 @@ export default function App() {
         }
       }
     }
-  }, [riskScore, browserNotifPermission, lastNotifSentAt]);
+  }, [riskScore, browserNotifPermission, isOnline, deviceId]);
 
-  // Fetch telemetry history from RDS to populate historical time-series curves
-  const fetchTelemetryHistory = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/devices/${deviceId}/telemetry/history?limit=20`);
-      if (res.ok) {
-        const historyData = await res.json();
-        if (Array.isArray(historyData) && historyData.length > 0) {
-          const vList = historyData.map(item => {
-            const d = item.received_at ? new Date(item.received_at) : new Date();
-            return {
-              value: item.voc_raw,
-              timeStr: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-              time: d
-            };
-          });
-          const tList = historyData.map(item => {
-            const d = item.received_at ? new Date(item.received_at) : new Date();
-            return {
-              value: item.temperature_c,
-              timeStr: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-              time: d
-            };
-          });
-          setVocHistory(vList);
-          setTempHistory(tList);
-        }
-      }
-    } catch (e) {
-      console.warn("Telemetry history fetch notice:", e);
-    }
-  };
-
-  // Fetch live state from backend API (connected to AWS IoT Core + RDS)
-  const fetchLiveStatus = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/devices/${deviceId}/status`);
-      if (res.ok) {
+  useEffect(() => {
+    const controller = new AbortController();
+    async function discover() {
+      try {
+        const res = await fetch(`${API_BASE}/devices`, {signal: controller.signal});
+        if (!res.ok) throw new Error('Start the sensor API on port 8081 to connect devices.');
         const data = await res.json();
-        
-        // Dynamic Online/Offline Detection
-        if (typeof data.is_online === 'boolean') {
-          setIsOnline(data.is_online);
-        } else if (data.last_updated) {
-          const elapsed = (Date.now() - new Date(data.last_updated).getTime()) / 1000;
-          setIsOnline(elapsed <= 20);
-        }
-
-        // Apply minimum risk floor of 4.5%
-        if (data.risk) {
-          const overall = Math.max(0.045, data.risk.overall ?? data.spoilage_risk ?? 0.048);
-          setRiskScore(overall);
-          setBioRisk(Math.max(0.045, data.risk.biochemical ?? 0.048));
-          setThermalRisk(Math.max(0.020, data.risk.thermal ?? 0.020));
-        }
-        if (data.remaining_useful_life) {
-          setRulHours(data.remaining_useful_life.hours ?? 72.0);
-        }
-        if (data.sensor) {
-          const newTemp = data.sensor.temperature_c ?? 29.8;
-          const newVoc = data.sensor.voc_raw ?? 31521;
-          const newNox = data.sensor.nox_raw ?? 16769;
-          const newHum = data.sensor.humidity_pct ?? 67.5;
-          setSensor({
-            voc_raw: newVoc,
-            nox_raw: newNox,
-            temperature_c: newTemp,
-            humidity_pct: newHum
-          });
-
-          const curTime = data.last_updated ? new Date(data.last_updated) : new Date();
-          const timeString = curTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-          setVocHistory(prev => {
-            const next = [...prev, { value: newVoc, timeStr: timeString, time: curTime }];
-            return next.slice(-20);
-          });
-          setTempHistory(prev => {
-            const next = [...prev, { value: newTemp, timeStr: timeString, time: curTime }];
-            return next.slice(-20);
-          });
-        }
-        if (data.last_updated) {
-          setLastUpdated(new Date(data.last_updated));
-        } else {
-          setLastUpdated(new Date());
-        }
-        setSecondsAgo(0);
-      } else {
-        setIsOnline(false);
-      }
-    } catch (e) {
-      setIsOnline(false);
+        setDevices(data.devices);
+        setDeviceId(current => current || data.devices[0] || '');
+        setFeedError('');
+      } catch (error) { if (!controller.signal.aborted) setFeedError(error.message); }
     }
-  };
+    discover();
+    const timer = setInterval(discover, 4000);
+    return () => { controller.abort(); clearInterval(timer); };
+  }, []);
+
+  const fetchTelemetryHistory = useCallback(async signal => {
+    if (!deviceId) return;
+    try {
+      const res = await fetch(`${API_BASE}/devices/${encodeURIComponent(deviceId)}/telemetry/history?limit=20`, {signal});
+      if (!res.ok) return;
+      const history = await res.json();
+      const points = key => history.map(item => {
+        const time = new Date(item.received_at);
+        return {value: item[key], time, timeStr: time.toLocaleTimeString()};
+      });
+      setVocHistory(points('voc_raw')); setTempHistory(points('temperature_c'));
+    } catch (error) { if (!signal?.aborted) console.warn('History unavailable:', error.message); }
+  }, [deviceId]);
+
+  const fetchLiveStatus = useCallback(async signal => {
+    if (!deviceId) return;
+    try {
+      const res = await fetch(`${API_BASE}/devices/${encodeURIComponent(deviceId)}/status`, {signal});
+      if (!res.ok) throw new Error('Could not read device status.');
+      const data = await res.json();
+      setIsOnline(data.is_online); setHasTelemetry(data.has_data && data.sensor != null);
+      setRiskScore(data.risk?.overall ?? null); setBioRisk(data.risk?.biochemical ?? null);
+      setThermalRisk(data.risk?.thermal ?? null); setDegradationVelocity(data.voc_velocity ?? null);
+      setRulHours(data.remaining_useful_life?.hours ?? null); setRulWindow(data.remaining_useful_life || {});
+      if (data.sensor && data.last_updated) {
+        setSensor(data.sensor);
+        const time = new Date(data.last_updated); setLastUpdated(time);
+        setSecondsAgo(Math.max(0, Math.floor((Date.now() - time.getTime()) / 1000)));
+        const append = (prev, value) => prev.at(-1)?.time?.getTime() === time.getTime()
+          ? prev : [...prev, {value, time, timeStr: time.toLocaleTimeString()}].slice(-20);
+        setVocHistory(prev => append(prev, data.sensor.voc_raw));
+        setTempHistory(prev => append(prev, data.sensor.temperature_c));
+      }
+    } catch (error) { if (!signal?.aborted) { setIsOnline(false); setFeedError(error.message); } }
+  }, [deviceId]);
 
   // Subscribe to AWS SNS Spoilage Alerts (Risk >= 80%)
   const handleSubscribeSNS = async (e) => {
@@ -308,118 +199,33 @@ export default function App() {
       } else {
         setSubResult({ success: false, message: data.detail || 'Failed to subscribe to AWS SNS.' });
       }
-    } catch (err) {
+    } catch {
       setSubResult({ success: false, message: 'Network error communicating with AWS SNS API.' });
     } finally {
       setSubLoading(false);
     }
   };
 
-  // Poll API every 4 seconds and increment elapsed seconds every second
   useEffect(() => {
-    fetchTelemetryHistory();
-    fetchLiveStatus();
-    const pollInterval = setInterval(fetchLiveStatus, 4000);
-    const tickInterval = setInterval(() => {
-      setSecondsAgo(prev => {
-        const next = prev + 1;
-        if (next > 20) {
-          setIsOnline(false);
-        }
-        return next;
-      });
-    }, 1000);
-    return () => {
-      clearInterval(pollInterval);
-      clearInterval(tickInterval);
-    };
-  }, [deviceId]);
+    const controller = new AbortController();
+    const initial = setTimeout(() => {
+      fetchTelemetryHistory(controller.signal); fetchLiveStatus(controller.signal);
+    }, 0);
+    const timer = setInterval(() => fetchLiveStatus(controller.signal), 4000);
+    return () => { controller.abort(); clearTimeout(initial); clearInterval(timer); };
+  }, [fetchTelemetryHistory, fetchLiveStatus]);
 
-  // Card Dynamic Style: Turns fully Green, Amber, or Red
+  useEffect(() => {
+    if (!lastUpdated) return;
+    const timer = setInterval(() => {
+      const elapsed = Math.max(0, Math.floor((Date.now() - lastUpdated.getTime()) / 1000));
+      setSecondsAgo(elapsed); if (elapsed > 15) setIsOnline(false);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [lastUpdated]);
+
   const isSpoiled = riskScore >= 0.80;
   const isWatch = riskScore >= 0.30 && riskScore < 0.80;
-
-  const getRiskCardClass = () => {
-    if (isSpoiled) return 'factor-card card-red-spoiled factor-card-hero';
-    if (isWatch) return 'factor-card card-amber-watch factor-card-hero';
-    return 'factor-card card-green-fresh factor-card-hero';
-  };
-
-  // Interactive Temperature Slider calculation (Arrhenius kinetic live simulation)
-  const handleTempSlider = (newTemp) => {
-    const t = parseFloat(newTemp);
-    const ea = 85000;
-    const r = 8.314;
-    const tKelvin = t + 273.15;
-    const tRefKelvin = 4.0 + 273.15;
-    const rateMultiplier = Math.exp(-(ea / r) * ((1.0 / tKelvin) - (1.0 / tRefKelvin)));
-    const calculatedThermal = Math.min(1.0, Math.max(0.02, (rateMultiplier * 0.05)));
-
-    const newOverall = Math.max(bioRisk, calculatedThermal);
-    setThermalRisk(calculatedThermal);
-    setRiskScore(newOverall);
-
-    // Adjust velocity based on temperature
-    const vel = -0.010 * (t / 25.0);
-    setDegradationVelocity(vel);
-    setVelocityHistory(prev => [...prev.slice(-15), vel]);
-
-    // Recalculate remaining hours
-    if (newOverall >= 0.80) {
-      setRulHours(0.0);
-    } else {
-      const remaining = Math.max(1.0, (0.85 - newOverall) / (Math.abs(vel) * 0.08));
-      setRulHours(remaining);
-    }
-
-    setSensor(prev => ({ ...prev, temperature_c: t }));
-    setTempHistory(prev => [...prev.slice(-15), t]);
-    setLastUpdated(new Date());
-    setSecondsAgo(0);
-  };
-
-  // Quick Preset Scenarios for Demonstrations
-  const applyPreset = (preset) => {
-    if (preset === 'fresh') {
-      setRiskScore(0.12);
-      setRulHours(42.0);
-      setBioRisk(0.10);
-      setThermalRisk(0.08);
-      setDegradationVelocity(-0.008);
-      setVelocityHistory(prev => [...prev.slice(-15), -0.008]);
-      setSensor({ voc_raw: 31800, nox_raw: 19800, temperature_c: 28.5, humidity_pct: 66.0 });
-      setVocHistory(prev => [...prev.slice(-15), 31800]);
-      setTempHistory(prev => [...prev.slice(-15), 28.5]);
-    } else if (preset === 'watch') {
-      setRiskScore(0.48);
-      setRulHours(14.5);
-      setBioRisk(0.35);
-      setThermalRisk(0.48);
-      setDegradationVelocity(-0.140);
-      setVelocityHistory(prev => [...prev.slice(-15), -0.140]);
-      setSensor({ voc_raw: 30800, nox_raw: 19100, temperature_c: 35.5, humidity_pct: 73.0 });
-      setVocHistory(prev => [...prev.slice(-15), 30800]);
-      setTempHistory(prev => [...prev.slice(-15), 35.5]);
-    } else if (preset === 'spoiled') {
-      setRiskScore(0.89);
-      setRulHours(0.0);
-      setBioRisk(0.89);
-      setThermalRisk(0.42);
-      setDegradationVelocity(-0.480);
-      setVelocityHistory(prev => [...prev.slice(-15), -0.480]);
-      setSensor({ voc_raw: 27800, nox_raw: 16200, temperature_c: 32.0, humidity_pct: 79.0 });
-      setVocHistory(prev => [...prev.slice(-15), 27800]);
-
-      // Fire AWS SNS Alert to all confirmed cloud subscribers (Email/SMS)
-      fetch(`${API_BASE}/notifications/publish-alert`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ device_id: deviceId, risk_score: 0.89, reason: 'Demo Preset: Spoiled and Hazardous' })
-      }).catch(e => console.warn("AWS SNS publish notice:", e));
-    }
-    setLastUpdated(new Date());
-    setSecondsAgo(0);
-  };
 
   // Mathematically Scaled SVG Sparkline with Dynamic Time-Axes, Grids, and Interactive Tooltips
   const renderSVGChart = (data, strokeColor = '#10b981', unit = 'ticks', minBound, maxBound, chartId = 'voc') => {
@@ -437,8 +243,9 @@ export default function App() {
     });
 
     const values = items.map(d => d.value);
-    const min = minBound ?? (Math.min(...values) * 0.995);
-    const max = maxBound ?? (Math.max(...values) * 1.005);
+    const padding = Math.max((Math.max(...values) - Math.min(...values)) * 0.08, Math.abs(Math.max(...values)) * 0.005, 0.1);
+    const min = minBound ?? Math.min(...values) - padding;
+    const max = maxBound ?? Math.max(...values) + padding;
     const range = (max - min) === 0 ? 1 : (max - min);
 
     const width = 560;
@@ -650,6 +457,14 @@ export default function App() {
           </nav>
 
           <div className="header-status-group">
+            <a href="/">Visual workspace ↗</a>
+            <label>Device <select aria-label="Select sensor device" value={deviceId} onChange={event => {
+              setHasTelemetry(false); setIsOnline(false); setVocHistory([]); setTempHistory([]);
+              setLastUpdated(null); setHoveredPoint(null); setDeviceId(event.target.value);
+            }}>
+              {!devices.length && <option value="">No connected devices</option>}
+              {devices.map(id => <option key={id} value={id}>{id}</option>)}
+            </select></label>
             {/* AWS SNS Notification Trigger & Registration Button */}
             <button 
               className="aws-sns-subscribe-btn"
@@ -667,7 +482,12 @@ export default function App() {
           </div>
         </header>
 
-        {/* TOP CRITICAL AWS ALERT BANNER (Triggers automatically when Risk >= 80%) */}
+        {activeTab !== 'about' && (!hasTelemetry || (activeTab === 'factors' && riskScore == null)) && <section className="factor-card" role="status">
+        <h2>Waiting for sensor readings</h2>
+        <p>{feedError || (hasTelemetry ? 'Readings are recorded. Waiting for an inference result.' : 'Connect a sensor node or send telemetry to the sensor API. Recorded devices appear in the selector.')}</p>
+      </section>}
+      {feedError && hasTelemetry && <p role="status">{feedError} Showing the last recorded reading.</p>}
+      {/* TOP CRITICAL AWS ALERT BANNER (Triggers automatically when Risk >= 80%) */}
         {isSpoiled && (
           <div className="critical-sns-alert-banner animate-fade-in">
             <div className="alert-content-group">
@@ -676,10 +496,10 @@ export default function App() {
               </div>
               <div className="alert-text-group">
                 <div className="alert-title-main">
-                  🚨 CRITICAL SPOILAGE DETECTED: {Math.round(riskScore * 100)}% RISK LEVEL (≥ 80% Threshold Exceeded)
+                  🚨 SENSOR INSPECTION ALERT: {percentage(riskScore)}% RISK LEVEL (≥ 80% Threshold Exceeded)
                 </div>
                 <div className="alert-subtitle-detail">
-                  Automated high-priority alert dispatched via Amazon SNS to cloud subscribers. Immediate cold-chain inspection or refrigeration required.
+                  Cloud alerts are sent when Amazon SNS is configured. Immediate cold-chain inspection or refrigeration required.
                 </div>
               </div>
             </div>
@@ -701,7 +521,7 @@ export default function App() {
       {/* ================================================================ */}
       {/* PAGE 1: CORE SPOILAGE FACTORS (3-TIER HIERARCHY SINGLE SCREEN)   */}
       {/* ================================================================ */}
-      {activeTab === 'factors' && (
+      {activeTab === 'factors' && hasTelemetry && riskScore != null && (
         <div className="page-view animate-fade-in">
           <section className="factors-section">
             {/* ROW 1: Spoilage Risk Score (Flagship Centerpiece Intelligence HUD - Way Bigger) */}
@@ -733,7 +553,7 @@ export default function App() {
                     />
                   </svg>
                   <div className="gauge-dial-center-text">
-                    <span className="gauge-dial-number">{Math.round(riskScore * 100)}%</span>
+                    <span className="gauge-dial-number">{percentage(riskScore)}%</span>
                     <span className="gauge-dial-unit">Risk Score</span>
                   </div>
                 </div>
@@ -743,15 +563,15 @@ export default function App() {
                     <span className="gauge-title-label">Live Spoilage Assessment</span>
                     <span className={isSpoiled ? 'gauge-status-pill-spoiled' : isWatch ? 'gauge-status-pill-watch' : 'gauge-status-pill-fresh'}>
                       {isSpoiled ? <AlertOctagon size={14} /> : isWatch ? <AlertTriangle size={14} /> : <ShieldCheck size={14} />}
-                      <span>{isSpoiled ? 'Spoiled & Hazardous' : isWatch ? 'Caution · Deteriorating' : 'Fresh & Safe to Consume'}</span>
+                      <span>{isSpoiled ? 'Inspection required' : isWatch ? 'Caution · Deteriorating' : 'Low sensor risk'}</span>
                     </span>
                   </div>
                   <p className="gauge-description-text">
                     {isSpoiled 
-                      ? `Critical alert: Spoilage index is ${Math.round(riskScore * 100)}%. Bio-chemical gas threshold exceeded. Discard produce immediately.`
+                      ? `Inspection alert: Sensor risk index is ${percentage(riskScore)}%. Bio-chemical gas threshold exceeded. Inspect the food and storage conditions.`
                       : isWatch 
-                      ? `Monitoring alert: Produce is deteriorating at ${Math.round(riskScore * 100)}% risk under current thermal conditions.`
-                      : `Optimal freshness: Produce is fresh and safe. Multi-gas baseline within pristine ranges (0% spoilage risk).`
+                      ? `Monitoring alert: Produce is deteriorating at ${percentage(riskScore)}% risk under current thermal conditions.`
+                      : `Low sensor risk: Continue monitoring and inspect the produce before use.`
                     }
                   </p>
                 </div>
@@ -764,9 +584,9 @@ export default function App() {
                     <Wind size={13} color="#059669" />
                   </div>
                   <div className="gauge-vector-val-row">
-                    <span className="gauge-vector-val-green">{Math.round(bioRisk * 100)}%</span>
+                    <span className="gauge-vector-val-green">{percentage(bioRisk)}%</span>
                     <div className="gauge-micro-bar">
-                      <div className="gauge-micro-fill-green" style={{ width: `${Math.min(100, Math.round(bioRisk * 100))}%` }} />
+                      <div className="gauge-micro-fill-green" style={{ width: `${Math.min(100, (bioRisk ?? 0) * 100)}%` }} />
                     </div>
                   </div>
                 </div>
@@ -776,9 +596,9 @@ export default function App() {
                     <Thermometer size={13} color="#dc2626" />
                   </div>
                   <div className="gauge-vector-val-row">
-                    <span className="gauge-vector-val-red">{Math.round(thermalRisk * 100)}%</span>
+                    <span className="gauge-vector-val-red">{percentage(thermalRisk)}%</span>
                     <div className="gauge-micro-bar">
-                      <div className="gauge-micro-fill-red" style={{ width: `${Math.min(100, Math.round(thermalRisk * 100))}%` }} />
+                      <div className="gauge-micro-fill-red" style={{ width: `${Math.min(100, (thermalRisk ?? 0) * 100)}%` }} />
                     </div>
                   </div>
                 </div>
@@ -791,7 +611,7 @@ export default function App() {
               <div className="factor-card factor-card-shelflife">
                 <div>
                   <div className="factor-card-title">
-                    <span style={{ color: '#0369a1' }}>Remaining Shelf Life</span>
+                    <span style={{ color: '#0369a1' }}>Estimated Remaining Life</span>
                     <Clock size={16} color="#0284c7" />
                   </div>
 
@@ -799,31 +619,31 @@ export default function App() {
                     <div className="spoiled-state-banner">
                       <div className="spoiled-state-title">
                         <AlertOctagon size={20} />
-                        <span>SPOILED</span>
+                        <span>INSPECT</span>
                       </div>
                       <div className="spoiled-state-desc">
-                        Shelf life expired. Food is spoiled.
+                        The configured sensor risk threshold has been crossed.
                       </div>
                     </div>
                   ) : (
                     <div>
                       <div className="shelf-life-metric" style={{ fontSize: '2.6rem' }}>
-                        {rulHours.toFixed(1)} <span className="shelf-life-unit" style={{ fontSize: '0.9rem' }}>Hours Left</span>
+                        {rulHours?.toFixed(1) ?? '—'} <span className="shelf-life-unit" style={{ fontSize: '0.9rem' }}>Hours Left</span>
                       </div>
                       <div className="confidence-chip-blue">
                         <span>Window:</span>
-                        <strong>{(rulHours * 0.85).toFixed(0)} to {(rulHours * 1.15).toFixed(0)} hrs</strong>
+                        <strong>{rulWindow.lower?.toFixed(0) ?? '—'} to {rulWindow.upper?.toFixed(0) ?? '—'} hrs</strong>
                       </div>
                       <div className="card-meta-text" style={{ marginTop: '8px', fontSize: '0.82rem' }}>
-                        Dynamic countdown before spoilage under current storage conditions.
+                        Model estimate to a configured sensor risk threshold.
                       </div>
                     </div>
                   )}
                 </div>
 
                 <div className="card-footer-subtle">
-                  <span>Safe Limit:</span>
-                  <strong>Unsafe &gt; 80%</strong>
+                  <span>Alert Threshold:</span>
+                  <strong>Risk ≥ 80%</strong>
                 </div>
               </div>
 
@@ -837,33 +657,33 @@ export default function App() {
 
                   <div className="velocity-readout-row" style={{ margin: '2px 0 6px 0' }}>
                     <span className="velocity-number" style={{ fontSize: '1.5rem' }}>
-                      {degradationVelocity.toFixed(3)}
+                      {degradationVelocity?.toFixed(3) ?? '—'}
                     </span>
                     <span className="velocity-unit">ticks/s</span>
                     <span className="velocity-status-bw" style={{ fontSize: '0.7rem', padding: '2px 9px' }}>
-                      {Math.abs(degradationVelocity) > 0.1 ? 'Fast' : 'Steady'}
+                      {degradationVelocity == null ? 'Unavailable' : Math.abs(degradationVelocity) > 0.1 ? 'Fast' : 'Steady'}
                     </span>
                   </div>
 
                   <div className="scenario-list-bw" style={{ padding: '6px 12px', gap: '4px' }}>
                     <div className="scenario-item-bw" style={{ fontSize: '0.76rem' }}>
                       <Snowflake size={13} color="#000000" style={{ flexShrink: 0 }} />
-                      <span><strong>Fridge (4°C):</strong> -78% spoilage rate (lasting 5x longer).</span>
+                      <span><strong>Fridge (4°C):</strong> Lower temperature reduces the modeled thermal rate.</span>
                     </div>
                     <div className="scenario-item-bw" style={{ fontSize: '0.76rem' }}>
                       <Leaf size={13} color="#000000" style={{ flexShrink: 0 }} />
-                      <span><strong>Room Temp:</strong> Standard baseline aging velocity.</span>
+                      <span><strong>Room Temp:</strong> Monitor changes against the session baseline.</span>
                     </div>
                     <div className="scenario-item-bw" style={{ fontSize: '0.76rem' }}>
                       <SunMedium size={13} color="#000000" style={{ flexShrink: 0 }} />
-                      <span><strong>Heat (&gt;35°C):</strong> 3x thermal degradation speedup.</span>
+                      <span><strong>Heat (&gt;35°C):</strong> Higher temperature increases accumulated thermal exposure.</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="card-footer-subtle">
                   <span>Aging Speed:</span>
-                  <strong>{Math.abs(degradationVelocity) > 0.1 ? 'Accelerated' : 'Normal'}</strong>
+                  <strong>{degradationVelocity == null ? 'Unavailable' : Math.abs(degradationVelocity) > 0.1 ? 'Accelerated' : 'Normal'}</strong>
                 </div>
               </div>
             </div>
@@ -890,10 +710,10 @@ export default function App() {
                     <span className="risk-bar-label" style={{ color: '#047857' }}>
                       <Wind size={14} color="#059669" /> Rotting Gas (VOC Index)
                     </span>
-                    <span className="risk-bar-val" style={{ color: '#059669' }}>{Math.round(bioRisk * 100)}%</span>
+                    <span className="risk-bar-val" style={{ color: '#059669' }}>{percentage(bioRisk)}%</span>
                   </div>
                   <div className="meter-track" style={{ height: '7px' }}>
-                    <div className="meter-fill-bio-green" style={{ width: `${Math.min(100, Math.round(bioRisk * 100))}%` }} />
+                    <div className="meter-fill-bio-green" style={{ width: `${Math.min(100, (bioRisk ?? 0) * 100)}%` }} />
                   </div>
                 </div>
 
@@ -903,10 +723,10 @@ export default function App() {
                     <span className="risk-bar-label" style={{ color: '#b91c1c' }}>
                       <Thermometer size={14} color="#dc2626" /> Thermal Abuse (Heat Exposure)
                     </span>
-                    <span className="risk-bar-val" style={{ color: '#dc2626' }}>{Math.round(thermalRisk * 100)}%</span>
+                    <span className="risk-bar-val" style={{ color: '#dc2626' }}>{percentage(thermalRisk)}%</span>
                   </div>
                   <div className="meter-track" style={{ height: '7px' }}>
-                    <div className="meter-fill-thermal-red" style={{ width: `${Math.min(100, Math.round(thermalRisk * 100))}%` }} />
+                    <div className="meter-fill-thermal-red" style={{ width: `${Math.min(100, (thermalRisk ?? 0) * 100)}%` }} />
                   </div>
                 </div>
               </div>
@@ -918,7 +738,7 @@ export default function App() {
       {/* ================================================================ */}
       {/* PAGE 2: ATMOSPHERIC STREAM (DEDICATED VIEW)                      */}
       {/* ================================================================ */}
-      {activeTab === 'telemetry' && (
+      {activeTab === 'telemetry' && hasTelemetry && (
         <div className="page-view animate-fade-in">
           {/* SENSOR LIVE UPDATE TIMESTAMP BANNER */}
           <div className={`telemetry-live-banner ${isOnline ? '' : 'telemetry-banner-offline'}`}>
@@ -934,9 +754,9 @@ export default function App() {
             </div>
             <div className="telemetry-actions-group">
               <span className={`telemetry-device-tag ${isOnline ? '' : 'device-tag-offline'}`}>
-                {isOnline ? 'Sensirion SGP41 + SHT40 Hardware Active' : 'Sensor Hardware Offline · Standby'}
+                {isOnline ? 'Sensirion SGP41 + BME280 Hardware Active' : 'Sensor Hardware Offline · Standby'}
               </span>
-              <button className="action-btn" onClick={fetchLiveStatus} title="Refresh sensor data">
+              <button className="action-btn" onClick={() => fetchLiveStatus()} title="Refresh sensor data">
                 <RefreshCw size={12} />
                 <span>{isOnline ? 'Refresh Feed' : 'Check Sensor Feed'}</span>
               </button>
@@ -1021,7 +841,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="chart-svg-box">
-                  {renderSVGChart(tempHistory, '#ef4444', '°C', 15, 45, 'temp')}
+                  {renderSVGChart(tempHistory, '#ef4444', '°C', undefined, undefined, 'temp')}
                 </div>
               </div>
             </div>
@@ -1030,10 +850,10 @@ export default function App() {
           {/* Telemetry Hardware Metadata & Controls */}
           <div className="telemetry-footer-bar">
             <div className="telemetry-footer-info">
-              <span className="footer-tag">Sensirion SGP41 (Gas MOx) + Sensirion SHT40 (Temp &amp; Humidity)</span>
+              <span className="footer-tag">Sensirion SGP41 (Gas MOx) + Sensirion BME280 (Temp &amp; Humidity)</span>
               <span className="footer-sub">Live telemetry via AWS IoT Core &rarr; SQS Queue &rarr; RDS Database</span>
             </div>
-            <button className="action-btn" onClick={fetchLiveStatus} title="Sync with live stream">
+            <button className="action-btn" onClick={() => fetchLiveStatus()} title="Sync with live stream">
               <RefreshCw size={12} />
               <span>Sync Atmosphere Feed</span>
             </button>
@@ -1069,7 +889,7 @@ export default function App() {
                   <span className="formula-card-badge-emerald">Sensirion SGP41 · VOC/NOx</span>
                 </div>
                 <div className="formula-box-wide">
-                  <code>Risk_bio = clamp((VOC_0 - VOC_t) / &Delta;_s, 0.045, 1.0)</code>
+                  <code>Risk_bio = clamp(weighted VOC + NOx + trend, 0.045, 1.0)</code>
                 </div>
               </div>
 
@@ -1094,10 +914,10 @@ export default function App() {
                     <Clock size={17} color="#0284c7" />
                     <span className="formula-card-title-text" style={{ color: '#0284c7' }}>Dynamic Shelf Life</span>
                   </div>
-                  <span className="formula-card-badge-sky">&plusmn;15% Confidence Countdown</span>
+                  <span className="formula-card-badge-sky">&plusmn;15% Estimate Window</span>
                 </div>
                 <div className="formula-box-wide">
-                  <code>RUL = (0.85 - Risk) / (|Velocity| &middot; c)</code>
+                  <code>RUL = bounded estimate from biochemical risk and degradation trend</code>
                 </div>
               </div>
             </div>
@@ -1105,16 +925,16 @@ export default function App() {
             {/* 4 Colorful Interactive Stat Widgets */}
             <div className="about-stat-widgets-4grid">
               <div className="stat-widget-box stat-widget-emerald">
-                <span className="stat-widget-number">40-60%</span>
-                <span className="stat-widget-label">Waste Reduction</span>
+                <span className="stat-widget-number">Median + EMA</span>
+                <span className="stat-widget-label">Signal filtering</span>
               </div>
               <div className="stat-widget-box stat-widget-sky">
-                <span className="stat-widget-number">&lt; 1.0s</span>
-                <span className="stat-widget-label">Edge Ingest Latency</span>
+                <span className="stat-widget-number">4 seconds</span>
+                <span className="stat-widget-label">Dashboard refresh</span>
               </div>
               <div className="stat-widget-box stat-widget-rose">
-                <span className="stat-widget-number">100%</span>
-                <span className="stat-widget-label">Non-Invasive Sensing</span>
+                <span className="stat-widget-number">VOC + NOx</span>
+                <span className="stat-widget-label">Gas channels</span>
               </div>
               <div className="stat-widget-box stat-widget-amber">
                 <span className="stat-widget-number">AWS IoT</span>
@@ -1139,7 +959,7 @@ export default function App() {
                 </div>
                 <div>
                   <h3 className="sns-modal-title">AWS Spoilage Alert Dispatch</h3>
-                  <p className="sns-modal-subtitle">Instant automated notification whenever Spoilage Risk reaches 80%</p>
+                  <p className="sns-modal-subtitle">Automated notification when Spoilage Risk reaches 80%</p>
                 </div>
               </div>
               <button className="modal-close-btn" onClick={() => setSubscribeModalOpen(false)}>
@@ -1193,7 +1013,7 @@ export default function App() {
                     </div>
 
                     <p className="browser-notif-explainer">
-                      Receive instant, zero-latency desktop and mobile popups directly from your operating system whenever Spoilage Risk reaches or exceeds <strong>80%</strong>. No email or phone entry required.
+                      Receive desktop notifications while this dashboard is open whenever Spoilage Risk reaches or exceeds <strong>80%</strong>. No email or phone entry required.
                     </p>
 
                     <div className="browser-notif-action-row">

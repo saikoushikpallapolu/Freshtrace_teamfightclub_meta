@@ -1,31 +1,40 @@
-import os
 import json
+import os
 import secrets
 import string
 import time
+from ipaddress import ip_network
+
 import boto3
 from dotenv import load_dotenv
 
 load_dotenv()
 
-ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
-SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 REGION = os.getenv("AWS_REGION", "ap-south-1")
+
+# Limit database ingress to an explicitly reviewed network.
+
+rds_cidr = os.getenv("AWS_RDS_ALLOWED_CIDR", "").strip()
+if not rds_cidr or ip_network(rds_cidr).prefixlen == 0:
+    raise SystemExit(
+        "Set AWS_RDS_ALLOWED_CIDR to the trusted worker/developer network before provisioning."
+    )
+
 
 print(f"--- Deploying Application AWS Cloud Infrastructure [{REGION}] ---")
 
 # Clients
-sts = boto3.client("sts", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
+sts = boto3.client("sts", region_name=REGION)
 account_id = sts.get_caller_identity()["Account"]
 print(f"Connected to AWS Account: {account_id}")
 
-sns = boto3.client("sns", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
-sqs = boto3.client("sqs", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
-s3 = boto3.client("s3", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
-iam = boto3.client("iam", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
-iot = boto3.client("iot", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
-ec2 = boto3.client("ec2", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
-rds = boto3.client("rds", aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY, region_name=REGION)
+sns = boto3.client("sns", region_name=REGION)
+sqs = boto3.client("sqs", region_name=REGION)
+s3 = boto3.client("s3", region_name=REGION)
+iam = boto3.client("iam", region_name=REGION)
+iot = boto3.client("iot", region_name=REGION)
+ec2 = boto3.client("ec2", region_name=REGION)
+rds = boto3.client("rds", region_name=REGION)
 
 # 1. Amazon SNS Topic for Spoilage Alerts
 print("\n[1/5] Provisioning Amazon SNS Alert Topic...")
@@ -42,8 +51,7 @@ try:
         s3.create_bucket(Bucket=bucket_name)
     else:
         s3.create_bucket(
-            Bucket=bucket_name,
-            CreateBucketConfiguration={"LocationConstraint": REGION}
+            Bucket=bucket_name, CreateBucketConfiguration={"LocationConstraint": REGION}
         )
     print(f"  -> S3 Bucket Created: {bucket_name}")
 except s3.exceptions.BucketAlreadyOwnedByYou:
@@ -68,16 +76,16 @@ trust_policy = {
         {
             "Effect": "Allow",
             "Principal": {"Service": "iot.amazonaws.com"},
-            "Action": "sts:AssumeRole"
+            "Action": "sts:AssumeRole",
         }
-    ]
+    ],
 }
 
 try:
     iam_role = iam.create_role(
         RoleName=role_name,
         AssumeRolePolicyDocument=json.dumps(trust_policy),
-        Description="IAM role for Application IoT Core Rule actions"
+        Description="IAM role for Application IoT Core Rule actions",
     )
     role_arn = iam_role["Role"]["Arn"]
     print(f"  -> IAM Role Created: {role_arn}")
@@ -89,22 +97,18 @@ except iam.exceptions.EntityAlreadyExistsException:
 rule_policy = {
     "Version": "2012-10-17",
     "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": ["sqs:SendMessage"],
-            "Resource": queue_arn
-        },
+        {"Effect": "Allow", "Action": ["sqs:SendMessage"], "Resource": queue_arn},
         {
             "Effect": "Allow",
             "Action": ["s3:PutObject"],
-            "Resource": f"arn:aws:s3:::{bucket_name}/*"
-        }
-    ]
+            "Resource": f"arn:aws:s3:::{bucket_name}/*",
+        },
+    ],
 }
 iam.put_role_policy(
     RoleName=role_name,
     PolicyName="ApplicationIoTRulePolicy",
-    PolicyDocument=json.dumps(rule_policy)
+    PolicyDocument=json.dumps(rule_policy),
 )
 
 # IoT Topic Rule
@@ -114,23 +118,17 @@ rule_payload = {
     "sql": sql_query,
     "description": "Forward project sensor telemetry to SQS and S3 archive",
     "actions": [
-        {
-            "sqs": {
-                "roleArn": role_arn,
-                "queueUrl": queue_url,
-                "useBase64": False
-            }
-        },
+        {"sqs": {"roleArn": role_arn, "queueUrl": queue_url, "useBase64": False}},
         {
             "s3": {
                 "roleArn": role_arn,
                 "bucketName": bucket_name,
-                "key": "raw/${topic(3)}/${parse_time(\"yyyy/MM/dd\", timestamp())}/${timestamp()}.json"
+                "key": 'raw/${topic(3)}/${parse_time("yyyy/MM/dd", timestamp())}/${timestamp()}.json',
             }
-        }
+        },
     ],
     "ruleDisabled": False,
-    "awsIotSqlVersion": "2016-03-23"
+    "awsIotSqlVersion": "2016-03-23",
 }
 
 for attempt in range(6):
@@ -144,7 +142,9 @@ for attempt in range(6):
         break
     except iot.exceptions.InvalidRequestException as e:
         if "unable to assume role" in str(e) and attempt < 5:
-            print(f"  -> Waiting for IAM role propagation to AWS IoT Core (attempt {attempt+1}/5)...")
+            print(
+                f"  -> Waiting for IAM role propagation to AWS IoT Core (attempt {attempt + 1}/5)..."
+            )
             time.sleep(5)
         else:
             raise e
@@ -163,11 +163,11 @@ try:
     sg_res = ec2.create_security_group(
         GroupName=sg_name,
         Description="Security Group for Application RDS PostgreSQL",
-        VpcId=default_vpc_id
+        VpcId=default_vpc_id,
     )
     sg_id = sg_res["GroupId"]
     print(f"  -> Created Security Group: {sg_id}")
-    # Allow port 5432 from anywhere (for local dev access and container access)
+    # Allow PostgreSQL only from the configured trusted network.
     ec2.authorize_security_group_ingress(
         GroupId=sg_id,
         IpPermissions=[
@@ -175,14 +175,17 @@ try:
                 "IpProtocol": "tcp",
                 "FromPort": 5432,
                 "ToPort": 5432,
-                "IpRanges": [{"CidrIp": "0.0.0.0/0", "Description": "Allow PostgreSQL access"}]
+                "IpRanges": [{"CidrIp": rds_cidr, "Description": "Allow PostgreSQL access"}],
             }
-        ]
+        ],
     )
 except ec2.exceptions.ClientError as e:
     if "InvalidGroup.Duplicate" in str(e):
         sgs = ec2.describe_security_groups(
-            Filters=[{"Name": "group-name", "Values": [sg_name]}, {"Name": "vpc-id", "Values": [default_vpc_id]}]
+            Filters=[
+                {"Name": "group-name", "Values": [sg_name]},
+                {"Name": "vpc-id", "Values": [default_vpc_id]},
+            ]
         )["SecurityGroups"]
         sg_id = sgs[0]["GroupId"]
         print(f"  -> Security Group already exists: {sg_id}")
@@ -210,13 +213,15 @@ if not db_found:
         PubliclyAccessible=True,
         BackupRetentionPeriod=1,
         StorageType="gp3",
-        AutoMinorVersionUpgrade=True
+        AutoMinorVersionUpgrade=True,
     )
-    print(f"  -> RDS instance creation started successfully!")
-    print(f"  -> Master User: backendadmin")
-    print(f"  -> Master Password: {db_password}")
+    print("  -> RDS instance creation started successfully!")
+    print("  -> Master User: backendadmin")
+    print("  -> Database password will be saved to the ignored .env file.")
 else:
-    print(f"  -> RDS instance '{db_identifier}' already exists (Status: {db_found['DBInstanceStatus']})")
+    print(
+        f"  -> RDS instance '{db_identifier}' already exists (Status: {db_found['DBInstanceStatus']})"
+    )
 
 # 5. Update .env with new AWS ARNs and Queue URLs
 print("\n[5/5] Updating .env with provisioned infrastructure...")

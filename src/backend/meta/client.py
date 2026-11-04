@@ -28,10 +28,15 @@ def load_image(path: Path) -> tuple[Image.Image, str]:
 
 
 def image_input(prompt: str, data_url: str) -> list:
-    return [{"role": "user", "content": [
-        {"type": "input_text", "text": prompt},
-        {"type": "input_image", "image_url": data_url},
-    ]}]
+    return [
+        {
+            "role": "user",
+            "content": [
+                {"type": "input_text", "text": prompt},
+                {"type": "input_image", "image_url": data_url},
+            ],
+        }
+    ]
 
 
 def make_client(key: str) -> OpenAI:

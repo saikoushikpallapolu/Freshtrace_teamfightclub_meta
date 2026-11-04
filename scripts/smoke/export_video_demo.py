@@ -21,9 +21,13 @@ def main():
         copyfile(args.workdir / name, args.output / name)
     for j, checkpoint in enumerate(data["spark"]["observation"]["checkpoints"]):
         i = checkpoint["frame_index"]
-        copyfile(args.workdir / "frames" / f"frame_{i + 1:04d}.jpg", args.output / f"checkpoint_{j}.jpg")
-        copyfile(args.workdir / "overlays" / f"frame_{i:04d}" / "sam_overlay.jpg",
-                 args.output / f"checkpoint_overlay_{j}.jpg")
+        copyfile(
+            args.workdir / "frames" / f"frame_{i + 1:04d}.jpg", args.output / f"checkpoint_{j}.jpg"
+        )
+        copyfile(
+            args.workdir / "overlays" / f"frame_{i:04d}" / "sam_overlay.jpg",
+            args.output / f"checkpoint_overlay_{j}.jpg",
+        )
     print(f"Exported recorded replay to {args.output}")
 
 

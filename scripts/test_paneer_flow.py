@@ -4,14 +4,15 @@ from pathlib import Path
 # Add src to sys.path
 sys.path.append(str(Path(__file__).resolve().parent.parent / "src"))
 
+from backend.biochemical.engine import BiochemicalEngine
+from backend.detection.onset import OnsetDetector
+from backend.evidence.events import EvidenceEngine
+from backend.fusion.risk import RiskFusion
 from backend.ingestion.processor import IngestionProcessor
 from backend.processing.signal_processor import SignalProcessor
-from backend.biochemical.engine import BiochemicalEngine
-from backend.thermal.engine import ThermalEngine
-from backend.detection.onset import OnsetDetector
 from backend.rul.estimator import RULEstimator
-from backend.fusion.risk import RiskFusion
-from backend.evidence.events import EvidenceEngine
+from backend.thermal.engine import ThermalEngine
+
 
 def test_live_paneer_flow():
     ingestor = IngestionProcessor(raw_storage_dir="data/raw")
@@ -33,7 +34,7 @@ def test_live_paneer_flow():
         "nox_raw": 0,
         "voc_index": 0,
         "nox_index": 0,
-        "wifi_rssi": -34
+        "wifi_rssi": -34,
     }
 
     print("=== Testing Paneer Live Sensor Flow ===")
@@ -43,7 +44,7 @@ def test_live_paneer_flow():
         # Simulate VOC tick drop (spoilage degradation) after sample 5
         if i > 5:
             p["voc_raw"] = 230 - (i - 5) * 15
-        
+
         raw = ingestor.process(p)
         processed = signal_engine.process(raw)
         bio = bio_engine.calculate_risk(processed)
@@ -53,9 +54,12 @@ def test_live_paneer_flow():
         fusion = risk_fusion.fuse(bio["biochemical_risk"], thermal["thermal_risk"])
         events = evidence_engine.evaluate(raw.session_id, raw.received_at, processed, bio, onset)
 
-        print(f"Sample {i}: VOC={p['voc_raw']} | BioRisk={bio['biochemical_risk']:.3f} | ThermalRisk={thermal['thermal_risk']:.3f} | Overall={fusion['overall_risk']:.3f} ({fusion['dominant_risk']}) | State={onset['current_state']} | RUL={rul['remaining_useful_life_hours']}h")
+        print(
+            f"Sample {i}: VOC={p['voc_raw']} | BioRisk={bio['biochemical_risk']:.3f} | ThermalRisk={thermal['thermal_risk']:.3f} | Overall={fusion['overall_risk']:.3f} ({fusion['dominant_risk']}) | State={onset['current_state']} | RUL={rul['remaining_useful_life_hours']}h"
+        )
         for ev in events:
             print(f"  >>> AUDIT EVENT: {ev['event']} at {ev['timestamp']}")
+
 
 if __name__ == "__main__":
     test_live_paneer_flow()

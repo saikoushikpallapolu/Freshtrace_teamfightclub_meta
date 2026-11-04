@@ -1,5 +1,3 @@
-# Capture and measurement UI
+# Photo capture and sample selection
 
-Planned CameraCapture, MaskOverlay and SessionProgress components. Align overlays/taps with original oriented image dimensions. Show warm-up, validity, device-busy and recovery states explicitly.
-
-See [repository architecture](../../../../docs/repository_architecture.md) for the complete layout and implementation boundaries.
+`SamplePicker.jsx` lists attributed public sample photos and imports a selected sample into the current batch. The workspace owns the user's photo-upload form. Samples and user captures both become saved observations before analysis is requested.
